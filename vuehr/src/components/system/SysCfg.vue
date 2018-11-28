@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>
-      系统管理
+      CNKI page16
     </h1>
   </div>
 </template>

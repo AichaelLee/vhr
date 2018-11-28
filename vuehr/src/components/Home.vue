@@ -1,15 +1,16 @@
 <template>
   <div>
     <el-container class="home-container">
-      <el-header class="home-header">
-        <span class="home_title">微人事</span>
+      <el-header height="100" class="home-header">
+        <span class="home_title">CNKI硕士生毕业设计系统</span>
         <div style="display: flex;align-items: center;margin-right: 7px">
           <el-badge style="margin-right: 30px" :is-dot="this.$store.state.nfDot">
             <i class="fa fa-bell-o" @click="goChat" style="cursor: pointer"></i>
           </el-badge>
+          <el-button type="button"><i class="el-icon-info">切换</i></el-button>
           <el-dropdown @command="handleCommand">
   <span class="el-dropdown-link home_userinfo" style="display: flex;align-items: center">
-    {{user.name}}
+    {{user.name}} 角色: 学生 院系:计算机学院
     <i><img v-if="user.userface!=''" :src="user.userface"
             style="width: 40px;height: 40px;margin-right: 5px;margin-left: 5px;border-radius: 40px"/></i>
   </span>
@@ -59,6 +60,8 @@
 <script>
   export default{
     mounted: function () {
+      alert(this.$route.params.role)
+     // alert(Object.entries(this.$route.params.role))
 //      this.devMsg();
       this.loadNF();
     },
@@ -137,6 +140,7 @@
 
   .home-header {
     background-color: #20a0ff;
+    height:100px;
     color: #333;
     text-align: center;
     display: flex;

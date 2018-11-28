@@ -1,5 +1,5 @@
 <template>
   <div>
-    <h1>员工资料</h1>
+    <h1>CNKI page1</h1>
   </div>
 </template>

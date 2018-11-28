@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>
-      员工积分统计
+      CNKI page111
     </h1>
   </div>
 </template>

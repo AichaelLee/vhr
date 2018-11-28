@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>
-      综合信息统计
+      CNKI page8
     </h1>
   </div>
 </template>

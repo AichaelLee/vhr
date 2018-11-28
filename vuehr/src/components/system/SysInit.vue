@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>
-      初始化数据库
+      CNKI page18
     </h1>
   </div>
 </template>

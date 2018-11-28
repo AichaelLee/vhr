@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/components/Login'
+import Role from '@/components/Role'
 import Home from '@/components/Home'
 import Chat from '@/components/chat/Chat'
 // import EmpAdv from '@/components/emp/EmpAdv'
@@ -34,6 +35,12 @@ export default new Router({
       path: '/',
       name: 'Login',
       component: Login,
+      hidden: true
+    }, 
+    {
+      path: '/role',
+      name: 'Role',
+      component: Role,
       hidden: true
     }, {
       path: '/home',
