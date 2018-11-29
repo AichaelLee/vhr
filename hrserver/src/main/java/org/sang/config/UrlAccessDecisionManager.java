@@ -6,7 +6,6 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +32,7 @@ public class UrlAccessDecisionManager implements AccessDecisionManager {
             }
             //当前用户所具有的权限
             Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+            System.out.println("===================123123"+authorities.toString());
             for (GrantedAuthority authority : authorities) {
                 if (authority.getAuthority().equals(needRole)) {
                     return;

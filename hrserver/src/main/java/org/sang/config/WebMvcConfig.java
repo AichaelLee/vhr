@@ -4,8 +4,8 @@ import org.sang.common.DateConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
+import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -23,5 +23,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Bean
     public ExecutorService executorService() {
         return Executors.newCachedThreadPool();
+    }
+
+    @Bean
+    public SimpleAuthorityMapper simpleAuthorityMapper(){
+        return  new SimpleAuthorityMapper();
     }
 }

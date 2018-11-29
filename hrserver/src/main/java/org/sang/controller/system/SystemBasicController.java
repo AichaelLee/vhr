@@ -3,11 +3,19 @@ package org.sang.controller.system;
 import org.sang.bean.*;
 import org.sang.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +38,12 @@ public class SystemBasicController {
     PositionService positionService;
     @Autowired
     JobLevelService jobLevelService;
+   // @Autowired
+    //RestAuthentication restAuthentication;
+
+
+    @Autowired
+    private SimpleAuthorityMapper simpleAuthorityMapper;
 
     @RequestMapping(value = "/role/{rid}", method = RequestMethod.DELETE)
     public RespBean deleteRole(@PathVariable Long rid) {
@@ -38,6 +52,40 @@ public class SystemBasicController {
         }
         return RespBean.error("删除失败!");
     }
+
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public void test(@AuthenticationPrincipal HrDetails origin) {
+       // System.out.println("===================origin authorities is :"+origin.getAuthorities().toString());
+     //  Hr2 hr =  (Hr2) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        //System.out.println("===================i think it's the same with origin :"+hr.getAuthorities().toString());
+        Authentication oldAuth = SecurityContextHolder.getContext().getAuthentication();
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_manager"));
+        Authentication newAuth = new UsernamePasswordAuthenticationToken(
+                oldAuth.getPrincipal(),oldAuth.getCredentials(),
+                authorities);
+        SecurityContextHolder.getContext().setAuthentication(newAuth);
+        Authentication aa = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("aaaaaaa********"+aa.getAuthorities().toString());
+        HrDetails after =  (HrDetails) aa.getPrincipal();
+        System.out.println("bbbbbbbbb*******"+after.getAuthorities().toString());
+
+
+//        Hr after =  (Hr) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        SecurityContextHolder.createEmptyContext();
+//        System.out.println("===================after reset autohiretei is :"+after.getAuthorities().toString());
+
+    }
+    @RequestMapping(value = "/test2", method = RequestMethod.GET)
+    public void test2(@AuthenticationPrincipal HrDetails origin) {
+
+        HrDetails after =  (HrDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+       // SecurityContextHolder.createEmptyContext();
+        System.out.println("===================after reset autohiretei is :"+origin.getAuthorities().toString());
+
+    }
+
+
 
     @RequestMapping(value = "/addRole", method = RequestMethod.POST)
     public RespBean addNewRole(String role, String roleZh) {

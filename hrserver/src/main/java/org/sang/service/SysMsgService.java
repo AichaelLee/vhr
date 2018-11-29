@@ -3,7 +3,6 @@ package org.sang.service;
 import org.sang.bean.Hr;
 import org.sang.bean.MsgContent;
 import org.sang.bean.SysMsg;
-import org.sang.common.HrUtils;
 import org.sang.mapper.SysMsgMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,14 +32,16 @@ public class SysMsgService {
 
     public List<SysMsg> getSysMsgByPage(Integer page, Integer size) {
         int start = (page - 1) * size;
-        return sysMsgMapper.getSysMsg(start,size, HrUtils.getCurrentHr().getId());
+        //return sysMsgMapper.getSysMsg(start,size, HrUtils.getCurrentHr().getId());
+        return null;
     }
 
     public boolean markRead(Long flag) {
         if (flag != -1) {
-            return sysMsgMapper.markRead(flag,HrUtils.getCurrentHr().getId())==1;
+            //return sysMsgMapper.markRead(flag,HrUtils.getCurrentHr().getId())==1;
+            return true;
         }
-        sysMsgMapper.markRead(flag,HrUtils.getCurrentHr().getId());
+       // sysMsgMapper.markRead(flag,HrUtils.getCurrentHr().getId());
         return true;
     }
 }

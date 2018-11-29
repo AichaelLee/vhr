@@ -1,11 +1,9 @@
 package org.sang.service;
 
 import org.sang.bean.Menu;
-import org.sang.common.HrUtils;
 import org.sang.mapper.MenuMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,7 +25,8 @@ public class MenuService {
     }
 
     public List<Menu> getMenusByHrId() {
-        return menuMapper.getMenusByHrId(HrUtils.getCurrentHr().getId());
+        //return menuMapper.getMenusByHrId(HrUtils.getCurrentHr().getId());
+        return null;
     }
 
     public List<Menu> menuTree() {

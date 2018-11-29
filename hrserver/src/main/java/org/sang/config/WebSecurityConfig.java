@@ -3,8 +3,10 @@ package org.sang.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.sang.bean.RespBean;
 import org.sang.common.HrUtils;
+import org.sang.common.RestUsernamePasswordAuthenticationProvider;
 import org.sang.service.HrService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.*;
 import org.springframework.security.config.annotation.ObjectPostProcessor;
@@ -15,6 +17,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
@@ -40,6 +43,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     UrlAccessDecisionManager urlAccessDecisionManager;
     @Autowired
     AuthenticationAccessDeniedHandler deniedHandler;
+
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    SimpleAuthorityMapper simpleAuthorityMapper;
+
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
+   // @Autowired
+    //HrService hrService;
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(hrService)
@@ -111,5 +128,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .logout().permitAll()
         .and().csrf().disable()
         .exceptionHandling().accessDeniedHandler(deniedHandler);
+        RestUsernamePasswordAuthenticationProvider provider = new RestUsernamePasswordAuthenticationProvider();
+       provider.setAuthoritiesMapper(simpleAuthorityMapper);
+        provider.setPasswordEncoder(bCryptPasswordEncoder);
+        provider.setUserDetailsService(hrService);
+
+        http.authenticationProvider(provider);
     }
 }
