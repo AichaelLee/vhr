@@ -5,7 +5,7 @@
         <span class="home_title">CNKI硕士生毕业设计系统</span>
         <div style="display: flex;align-items: center;margin-right: 7px">
           <el-badge style="margin-right: 30px" :is-dot="this.$store.state.nfDot">
-            <i class="fa fa-bell-o" @click="goChat" style="cursor: pointer"></i>
+            <i class="fa fa-bell-o" @click="alert()" style="cursor: pointer"></i>
           </el-badge>
           <el-button type="button"><i class="el-icon-info">切换</i></el-button>
           <el-dropdown @command="handleCommand">
@@ -80,9 +80,6 @@ import router from '../router'
           })
           _this.$store.commit('toggleNFDot', isDot);
         })
-      },
-      goChat(){
-        this.$router.push({path: '/chat'});
       },
       devMsg(){
         this.$alert('为了确保所有的小伙伴都能看到完整的数据演示，数据库只开放了查询权限和部分字段的更新权限，其他权限都不具备，完整权限的演示需要大家在自己本地部署后，换一个正常的数据库用户后即可查看，这点请大家悉知!', '友情提示', {
