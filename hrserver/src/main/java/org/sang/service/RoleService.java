@@ -21,6 +21,10 @@ public class RoleService {
         return roleMapper.roles();
     }
 
+    public List<Role> getRolesByUserId(Long id){
+        return  roleMapper.getRolesByUserId(id);
+    }
+
     public int addNewRole(String role, String roleZh) {
         if (!role.startsWith("ROLE_")) {
             role = "ROLE_" + role;

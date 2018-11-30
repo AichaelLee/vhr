@@ -1,13 +1,10 @@
 package org.sang.controller.system;
 
 import org.sang.bean.*;
+import org.sang.common.HrUtils;
 import org.sang.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,8 +35,13 @@ public class SystemBasicController {
     PositionService positionService;
     @Autowired
     JobLevelService jobLevelService;
-   // @Autowired
-    //RestAuthentication restAuthentication;
+
+    @Autowired
+    HrService hrService;
+
+    /**切换用户选择的角色**/
+    @Autowired
+    RestAuthentication restAuthentication;
 
 
     @Autowired
@@ -53,38 +55,40 @@ public class SystemBasicController {
         return RespBean.error("删除失败!");
     }
 
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public void test(@AuthenticationPrincipal HrDetails origin) {
-       // System.out.println("===================origin authorities is :"+origin.getAuthorities().toString());
-     //  Hr2 hr =  (Hr2) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        //System.out.println("===================i think it's the same with origin :"+hr.getAuthorities().toString());
-        Authentication oldAuth = SecurityContextHolder.getContext().getAuthentication();
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_manager"));
-        Authentication newAuth = new UsernamePasswordAuthenticationToken(
-                oldAuth.getPrincipal(),oldAuth.getCredentials(),
-                authorities);
-        SecurityContextHolder.getContext().setAuthentication(newAuth);
-        Authentication aa = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("aaaaaaa********"+aa.getAuthorities().toString());
-        HrDetails after =  (HrDetails) aa.getPrincipal();
-        System.out.println("bbbbbbbbb*******"+after.getAuthorities().toString());
+    @RequestMapping(value = "/chooseRole", method = RequestMethod.GET)
+    public RespBean chooseRole(String choosedRole) throws Exception{
 
+        System.out.println("用户选择的角色为:"+choosedRole);
 
-//        Hr after =  (Hr) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        SecurityContextHolder.createEmptyContext();
-//        System.out.println("===================after reset autohiretei is :"+after.getAuthorities().toString());
+        // 切换用户选择的角色
+        restAuthentication.resetUserAuthorities(choosedRole);
 
-    }
-    @RequestMapping(value = "/test2", method = RequestMethod.GET)
-    public void test2(@AuthenticationPrincipal HrDetails origin) {
+        System.out.println("重置之后的角色为:"+SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
 
-        HrDetails after =  (HrDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-       // SecurityContextHolder.createEmptyContext();
-        System.out.println("===================after reset autohiretei is :"+origin.getAuthorities().toString());
-
+        Role newRole = new Role();
+        newRole.setName(choosedRole);
+        HrUtils.getCurrentHr().getHr2().setRoles(Arrays.asList(newRole));
+        return  RespBean.ok("登录成功!", HrUtils.getCurrentHr().getHr2());
     }
 
+    /**
+     * 当用户点击右上角的切换按钮的时候
+     * **/
+    @RequestMapping(value = "/switchRole", method = RequestMethod.GET)
+    public RespBean switchRole(@AuthenticationPrincipal HrDetails details) throws Exception{
+
+        System.out.println("此时用户权限为"+details.getAuthorities().toString());
+
+        // 查询数据库,得到用户初始的所有角色返回给前端
+
+        List<Role> roles = hrService.getRolesByHrId(details.getHr2().getId());
+
+
+        HrUtils.getCurrentHr().getHr2().setRoles(roles);
+
+
+        return RespBean.ok("登录成功!", HrUtils.getCurrentHr().getHr2());
+    }
 
 
     @RequestMapping(value = "/addRole", method = RequestMethod.POST)

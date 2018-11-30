@@ -1,37 +1,53 @@
 package org.sang.service;
 
-import org.sang.bean.Hr;
+import org.sang.bean.Hr2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by aichaellee on 2018/11/28.
  */
-//@Service
+@Service
 public class RestAuthentication {
 
     @Autowired
     private SimpleAuthorityMapper simpleAuthorityMapper;
 
-    public void resetUserAuthorities(Hr hr){
-        Authentication oldAuth = SecurityContextHolder.getContext().getAuthentication();
+    public void resetUserAuthorities(String  choosedRole){
 
+
+        Authentication oldAuth = SecurityContextHolder.getContext().getAuthentication();
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(choosedRole));
         Authentication newAuth = new UsernamePasswordAuthenticationToken(
                 oldAuth.getPrincipal(),oldAuth.getCredentials(),
-                simpleAuthorityMapper.mapAuthorities(getAuthorities(hr)));
-        SecurityContextHolder.createEmptyContext();
+                authorities);
         SecurityContextHolder.getContext().setAuthentication(newAuth);
+
+
+
+//        Authentication oldAuth = SecurityContextHolder.getContext().getAuthentication();
+//
+//        Authentication newAuth = new UsernamePasswordAuthenticationToken(
+//                oldAuth.getPrincipal(),oldAuth.getCredentials(),
+//                simpleAuthorityMapper.mapAuthorities(getAuthorities(hr)));
+//        SecurityContextHolder.createEmptyContext();
+//        SecurityContextHolder.getContext().setAuthentication(newAuth);
     }
 
 
-    private Collection<GrantedAuthority> getAuthorities(Hr users) {
+    private Collection<GrantedAuthority> getAuthorities(Hr2 users) {
 
         if (users != null) {
 

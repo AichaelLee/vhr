@@ -12,4 +12,7 @@
     <delete id="deleteRoleById" parameterType="Long">
         DELETE FROM role WHERE id=#{rid}
     </delete>
+    <select id="getRolesByUserId" resultType="org.sang.bean.Role">
+        SELECT * FROM role where id=#{userId};
+    </select>
 </mapper>

@@ -17,4 +17,8 @@ public class HrDetails extends User {
         this.hr2 = hr;
     }
 
+    public Hr2 getHr2(){
+        return hr2;
+    }
+
 }
