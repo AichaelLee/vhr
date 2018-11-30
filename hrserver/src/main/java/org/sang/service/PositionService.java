@@ -1,6 +1,5 @@
 package org.sang.service;
 
-import org.sang.bean.JobLevel;
 import org.sang.bean.Position;
 import org.sang.mapper.PositionMapper;
 import org.springframework.beans.factory.annotation.Autowired;
