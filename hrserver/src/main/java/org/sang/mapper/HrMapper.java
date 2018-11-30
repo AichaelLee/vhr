@@ -2,7 +2,7 @@ package org.sang.mapper;
 
 import org.apache.ibatis.annotations.Param;
 import org.sang.bean.Hr;
-import org.sang.bean.Hr2;
+import org.sang.bean.Managers;
 import org.sang.bean.Role;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
  * Created by sang on 2017/12/28.
  */
 public interface HrMapper {
-    Hr2 loadUserByUsername(String username);
+    Managers loadUserByUsername(String username);
 
     List<Role> getRolesByHrId(Long id);
 

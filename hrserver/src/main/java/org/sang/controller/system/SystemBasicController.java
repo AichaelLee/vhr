@@ -1,7 +1,7 @@
 package org.sang.controller.system;
 
 import org.sang.bean.*;
-import org.sang.common.HrUtils;
+import org.sang.common.UserUtils;
 import org.sang.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -67,27 +67,27 @@ public class SystemBasicController {
 
         Role newRole = new Role();
         newRole.setName(choosedRole);
-        HrUtils.getCurrentHr().getHr2().setRoles(Arrays.asList(newRole));
-        return  RespBean.ok("登录成功!", HrUtils.getCurrentHr().getHr2());
+        UserUtils.getCurrentHr().getTeachers().setRoles(Arrays.asList(newRole));
+        return  RespBean.ok("登录成功!", UserUtils.getCurrentHr().getTeachers());
     }
 
     /**
      * 当用户点击右上角的切换按钮的时候
      * **/
     @RequestMapping(value = "/switchRole", method = RequestMethod.GET)
-    public RespBean switchRole(@AuthenticationPrincipal HrDetails details) throws Exception{
+    public RespBean switchRole(@AuthenticationPrincipal ManagersDetails details) throws Exception{
 
         System.out.println("此时用户权限为"+details.getAuthorities().toString());
 
         // 查询数据库,得到用户初始的所有角色返回给前端
 
-        List<Role> roles = hrService.getRolesByHrId(details.getHr2().getId());
+        List<Role> roles = hrService.getRolesByHrId(details.getTeachers().getId());
 
 
-        HrUtils.getCurrentHr().getHr2().setRoles(roles);
+        UserUtils.getCurrentHr().getTeachers().setRoles(roles);
 
 
-        return RespBean.ok("登录成功!", HrUtils.getCurrentHr().getHr2());
+        return RespBean.ok("登录成功!", UserUtils.getCurrentHr().getTeachers());
     }
 
 

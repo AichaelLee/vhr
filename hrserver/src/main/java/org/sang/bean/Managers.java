@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by sang on 2017/12/28.
  */
-public class Hr2 {
+public class Managers {
     private Long id;
     private String name;
     private String phone;

@@ -8,17 +8,17 @@ import java.util.Collection;
 /**
  * Created by aichaellee on 2018/11/28.
  */
-public class HrDetails extends User {
+public class ManagersDetails extends User {
 
-    private final Hr2 hr2;
+    private final Managers managers;
 
-    public HrDetails(Hr2 hr,Collection<? extends GrantedAuthority> authorities){
+    public ManagersDetails(Managers hr, Collection<? extends GrantedAuthority> authorities){
         super(hr.getName(),hr.getPassword(),authorities);
-        this.hr2 = hr;
+        this.managers = hr;
     }
 
-    public Hr2 getHr2(){
-        return hr2;
+    public Managers getTeachers(){
+        return managers;
     }
 
 }

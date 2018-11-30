@@ -1,8 +1,8 @@
 package org.sang.controller;
 
-import org.sang.bean.Hr2;
+import org.sang.bean.Managers;
 import org.sang.bean.Menu;
-import org.sang.common.HrUtils;
+import org.sang.common.UserUtils;
 import org.sang.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +25,7 @@ public class ConfigController {
     }
 
     @RequestMapping("/hr")
-    public Hr2 currentUser() {
-        return HrUtils.getCurrentHr().getHr2();
+    public Managers currentUser() {
+        return UserUtils.getCurrentHr().getTeachers();
     }
 }
