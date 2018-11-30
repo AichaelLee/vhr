@@ -13,7 +13,9 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * Created by sang on 2017/12/28.
+ * 自定义实现投票器实现用户鉴权
+ * @author: lizhizhong
+ * CreatedDate: 2018/11/30.
  */
 @Component
 public class UrlAccessDecisionManager implements AccessDecisionManager {

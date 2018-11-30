@@ -15,7 +15,9 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Created by sang on 2017/12/28.
+ * 储存请求和权限的对应关系
+ * @author: lizhizhong
+ * CreatedDate: 2018/11/28.
  */
 @Component
 public class CustomMetadataSource implements FilterInvocationSecurityMetadataSource {

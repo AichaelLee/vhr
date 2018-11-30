@@ -11,7 +11,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Created by sang on 2018/1/2.
+ * 通用Bean注册
+ * @author: lizhizhong
+ * CreatedDate: 2018/11/26.
  */
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {

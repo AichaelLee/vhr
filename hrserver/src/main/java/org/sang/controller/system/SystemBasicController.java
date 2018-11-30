@@ -16,7 +16,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by sang on 2017/12/29.
+ * 系统基本设置
+ * @author: lizhizhong
+ * CreatedDate: 2018/11/26.
  */
 @RestController
 @RequestMapping("/system/basic")
@@ -83,7 +85,10 @@ public class SystemBasicController {
 
     /**
      * 当用户点击右上角的切换按钮的时候
-     * **/
+     * @param details
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(value = "/switchRole", method = RequestMethod.GET)
     public RespBean switchRole(@AuthenticationPrincipal ManagersDetails details) throws Exception{
 
@@ -100,12 +105,10 @@ public class SystemBasicController {
         return RespBean.ok("登录成功!", UserUtils.getCurrentHr().getManagers());
     }
 
-
     /**
      * 获得该学校的所有学年
-     *
-     * **/
-
+     * @return
+     */
     @GetMapping(value="/getPlans")
     public RespBean getPlans(){
         TblPlanExample example = new TblPlanExample();
@@ -122,7 +125,7 @@ public class SystemBasicController {
      * TODO 后续或许会加上一个Choose_Role 和 Choose_Role_OK 的这两个权限
      *
      * **/
-
+    @Deprecated
     @GetMapping(value="/getSwitchAuth")
     public RespBean getSwitchAuth(@AuthenticationPrincipal Object principal){
         RespBean respBean = null;
@@ -138,7 +141,12 @@ public class SystemBasicController {
     }
 
 
-
+    /**
+     * 添加角色
+     * @param role
+     * @param roleZh
+     * @return
+     */
     @RequestMapping(value = "/addRole", method = RequestMethod.POST)
     public RespBean addNewRole(String role, String roleZh) {
         if (roleService.addNewRole(role, roleZh) == 1) {
@@ -157,6 +165,12 @@ public class SystemBasicController {
         return map;
     }
 
+    /**
+     * 更新菜单权限 TODO
+     * @param rid
+     * @param mids
+     * @return
+     */
     @RequestMapping(value = "/updateMenuRole", method = RequestMethod.PUT)
     public RespBean updateMenuRole(Long rid, Long[] mids) {
         if (menuRoleService.updateMenuRole(rid, mids) == mids.length) {
@@ -165,6 +179,10 @@ public class SystemBasicController {
         return RespBean.error("更新失败!");
     }
 
+    /**
+     * 得到所有角色,注意不是查看某用户的所有角色
+     * @return 当前系统存在的所有角色
+     */
     @RequestMapping("/roles")
     public List<Role> allRoles() {
         return roleService.roles();

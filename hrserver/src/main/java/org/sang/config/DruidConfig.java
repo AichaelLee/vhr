@@ -13,7 +13,9 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 
 /**
- * Created by aichaellee on 2018/11/29.
+ * Druid可视化监控配置
+ * @author: lizhizhong
+ * CreatedDate: 2018/11/29.
  */
 //@Configuration
 public class DruidConfig {

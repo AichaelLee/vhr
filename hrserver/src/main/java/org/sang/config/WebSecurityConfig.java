@@ -33,7 +33,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- * Created by sang on 2017/12/28.
+ * spring security 配置类
+ * @author: lizhizhong
+ * CreatedDate: 2018/11/26.
  */
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -97,8 +99,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * 自定义用户类型验证过滤器,增加userType字段
-     * **/
-
+     * @return
+     * @throws Exception
+     */
     public CustomUserTypeAuthenticationFilter authenticationFilter() throws Exception {
         CustomUserTypeAuthenticationFilter filter = new CustomUserTypeAuthenticationFilter();
         filter.setAuthenticationManager(authenticationManagerBean());
@@ -110,10 +113,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * 自定义验证失败处理器
-     * @author lizhizhong
-     *
-     * **/
-
+     */
     private class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler{
 
         @Override
@@ -140,10 +140,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * 自定义验证失败处理器
-     * @author lizhizhong
      *
      * **/
-
     private class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler{
 
 

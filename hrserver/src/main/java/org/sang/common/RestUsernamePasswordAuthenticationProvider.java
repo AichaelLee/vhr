@@ -6,6 +6,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 
+/**
+ *
+ * @author: lizhizhong
+ * CreatedDate: 2018/11/28.
+ */
 public class RestUsernamePasswordAuthenticationProvider extends DaoAuthenticationProvider {
 
     @Override
@@ -37,8 +42,6 @@ public class RestUsernamePasswordAuthenticationProvider extends DaoAuthenticatio
         UsernamePasswordAuthenticationToken result = new UsernamePasswordAuthenticationToken(
                 principal, token.getCredentials(), s.getAuthorities());
         result.setDetails(token.getDetails());
-        System.out.println("=============c1"+s.getAuthorities().toString());
-        System.out.println("=============c2"+token.getAuthorities().toString());
 
         return result;
     }
