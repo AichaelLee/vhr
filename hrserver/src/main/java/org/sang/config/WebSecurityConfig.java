@@ -5,7 +5,6 @@ import org.sang.bean.ManagersDetails;
 import org.sang.bean.RespBean;
 import org.sang.bean.StudentDetails;
 import org.sang.common.CustomUserTypeAuthenticationFilter;
-import org.sang.common.UserUtils;
 import org.sang.service.SecurityUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -127,7 +126,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             if(principal instanceof ManagersDetails){
-                respBean =RespBean.ok("登录成功!",  ((ManagersDetails) principal).getTeachers());;
+                respBean =RespBean.ok("登录成功!",  ((ManagersDetails) principal).getManagers());;
             }else{
                 respBean =RespBean.ok("登录成功!",  ((StudentDetails) principal).getStudent());
             }

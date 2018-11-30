@@ -58,12 +58,15 @@
   </div>
 </template>
 <script>
+import {initMenu} from '../utils/utils'
+import router from '../router'
   export default{
+    
     mounted: function () {
-      alert(this.$route.params.role)
+    // alert(this.$route.params.role)
      // alert(Object.entries(this.$route.params.role))
 //      this.devMsg();
-      this.loadNF();
+    //  this.loadNF();
     },
     methods: {
       loadNF(){

@@ -1,5 +1,8 @@
 package org.sang.bean;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+@JsonSerialize(include =  JsonSerialize.Inclusion.NON_NULL)
 public class RespBean {
     private Integer status;
     private String msg;

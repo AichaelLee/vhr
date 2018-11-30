@@ -17,7 +17,7 @@ public class ManagersDetails extends User {
         this.managers = hr;
     }
 
-    public Managers getTeachers(){
+    public Managers getManagers(){
         return managers;
     }
 

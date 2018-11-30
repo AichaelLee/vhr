@@ -91,7 +91,7 @@ public class HrService {
     }
 
     public List<Hr> getAllHrExceptAdmin() {
-        //return hrMapper.getAllHr(UserUtils.getCurrentHr().getTeachers());
+        //return hrMapper.getAllHr(UserUtils.getCurrentHr().getManagers());
         return null;
     }
     public List<Hr> getAllHr() {

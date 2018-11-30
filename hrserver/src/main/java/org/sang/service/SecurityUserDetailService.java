@@ -19,10 +19,14 @@ public class SecurityUserDetailService implements UserDetailsService{
     @Autowired
     HrService hrService;
 
+
+    // 学生用户
     public static final String STUDENT = "1";
 
+    // 管理员用户
     public static final String ADMIN = "2";
 
+    // 教师用户
     public static final String TEACHER = "3";
 
 
@@ -37,8 +41,6 @@ public class SecurityUserDetailService implements UserDetailsService{
         String username = usernameAndUserType[0];
         String userType = usernameAndUserType[1];
 
-        System.out.println("usertypeadndname==========="+username);
-        System.out.println("usertype==========="+userType);
 
         // 如果账号类型为 [学生]
         if(userType.equals(STUDENT)){
@@ -54,8 +56,6 @@ public class SecurityUserDetailService implements UserDetailsService{
             // 如果账号类型为 [教师] TODO
             return hrService.loadUserByUsername(username);
         }
-
-        // 如果账号类型为 教师
 
 
     }

@@ -2,15 +2,13 @@ package org.sang.controller.system;
 
 import org.sang.bean.*;
 import org.sang.common.UserUtils;
+import org.sang.mapper.TblPlanMapper;
 import org.sang.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -39,6 +37,9 @@ public class SystemBasicController {
     @Autowired
     HrService hrService;
 
+    @Autowired
+    TblPlanMapper tblPlanMapper;
+
     /**切换用户选择的角色**/
     @Autowired
     RestAuthentication restAuthentication;
@@ -55,8 +56,17 @@ public class SystemBasicController {
         return RespBean.error("删除失败!");
     }
 
-    @RequestMapping(value = "/chooseRole", method = RequestMethod.GET)
-    public RespBean chooseRole(String choosedRole) throws Exception{
+    @PostMapping(value = "/chooseRole")
+    public RespBean chooseRole(@AuthenticationPrincipal Object principal, String choosedRole) throws Exception{
+
+        if(principal instanceof ManagersDetails){
+            System.out.println("管理员用户之前的全部角色为"+
+                    ((ManagersDetails) principal).getAuthorities().toString());
+        }else{
+            System.out.println("学生用户之前的全部角色为"+
+                    ((StudentDetails) principal).getAuthorities().toString());
+        }
+
 
         System.out.println("用户选择的角色为:"+choosedRole);
 
@@ -67,8 +77,8 @@ public class SystemBasicController {
 
         Role newRole = new Role();
         newRole.setName(choosedRole);
-        UserUtils.getCurrentHr().getTeachers().setRoles(Arrays.asList(newRole));
-        return  RespBean.ok("登录成功!", UserUtils.getCurrentHr().getTeachers());
+        UserUtils.getCurrentHr().getManagers().setRoles(Arrays.asList(newRole));
+        return  RespBean.ok("登录成功!", UserUtils.getCurrentHr().getManagers());
     }
 
     /**
@@ -81,14 +91,52 @@ public class SystemBasicController {
 
         // 查询数据库,得到用户初始的所有角色返回给前端
 
-        List<Role> roles = hrService.getRolesByHrId(details.getTeachers().getId());
+        List<Role> roles = hrService.getRolesByHrId(details.getManagers().getId());
 
 
-        UserUtils.getCurrentHr().getTeachers().setRoles(roles);
+        UserUtils.getCurrentHr().getManagers().setRoles(roles);
 
 
-        return RespBean.ok("登录成功!", UserUtils.getCurrentHr().getTeachers());
+        return RespBean.ok("登录成功!", UserUtils.getCurrentHr().getManagers());
     }
+
+
+    /**
+     * 获得该学校的所有学年
+     *
+     * **/
+
+    @GetMapping(value="/getPlans")
+    public RespBean getPlans(){
+        TblPlanExample example = new TblPlanExample();
+        example.createCriteria().andPlanIdIsNotNull();
+        List<TblPlan> plans = tblPlanMapper.selectByExample(example);
+        System.out.println("---------------"+plans.size());
+
+        return RespBean.ok("获取所有学年成功",plans);
+    }
+
+    /**
+     * 教师用户选择完角色后,进入主页前重新获得权限,此时用户只有一个权限
+     *
+     * TODO 后续或许会加上一个Choose_Role 和 Choose_Role_OK 的这两个权限
+     *
+     * **/
+
+    @GetMapping(value="/getSwitchAuth")
+    public RespBean getSwitchAuth(@AuthenticationPrincipal Object principal){
+        RespBean respBean = null;
+        if(principal instanceof ManagersDetails){
+            respBean =RespBean.ok("选择角色成功!",  ((ManagersDetails) principal).getManagers());;
+        }else{
+            respBean =RespBean.ok("选择角色成功!",  ((StudentDetails) principal).getStudent());
+        }
+        return respBean;
+
+
+
+    }
+
 
 
     @RequestMapping(value = "/addRole", method = RequestMethod.POST)

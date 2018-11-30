@@ -26,6 +26,6 @@ public class ConfigController {
 
     @RequestMapping("/hr")
     public Managers currentUser() {
-        return UserUtils.getCurrentHr().getTeachers();
+        return UserUtils.getCurrentHr().getManagers();
     }
 }
