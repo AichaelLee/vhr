@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.cnki.mapper.StudentMapper">
+    <resultMap id="BaseResultMap" type="net.cnki.bean.TblStudentBase">
+        <id column="SID" property="sid"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="school_num" property="schoolNum"/>
+        <result column="student_num" property="studentNum"/>
+        <result column="student_name" property="studentName"/>
+    </resultMap>
+    <resultMap id="lazyLoadRoles" type="net.cnki.bean.TblStudentBase" extends="BaseResultMap">
+    </resultMap>
+    <resultMap id="eagerLoadRoles" type="net.cnki.bean.Managers" extends="BaseResultMap">
+        <collection property="roles" ofType="net.cnki.bean.Role">
+            <id property="id" column="rid"/>
+            <result property="name" column="rname"/>
+            <result property="nameZh" column="rnameZh"/>
+        </collection>
+    </resultMap>
+    <select id="loadUserByUsername" resultMap="lazyLoadRoles">
+        select * from tbl_student_base WHERE username=#{username};
+    </select>
+    <select id="getRolesByStudentId" resultType="net.cnki.bean.Role">
+        SELECT r.* FROM hr_role h,role r where h.rid=r.id AND h.hrid=#{id}
+    </select>
+
+</mapper>
