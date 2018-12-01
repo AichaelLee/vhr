@@ -1,6 +1,7 @@
 package org.sang.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.sang.common.UserTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -9,7 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 /**
- * Created by aichaellee on 2018/11/30.
+ * @author: lizhizhong
+ * CreatedDate: 2018/11/30.
  */
 @Service
 @Slf4j
@@ -21,15 +23,6 @@ public class SecurityUserDetailService implements UserDetailsService{
     @Autowired
     HrService hrService;
 
-
-    // 学生用户
-    public static final String STUDENT = "1";
-
-    // 管理员用户
-    public static final String ADMIN = "2";
-
-    // 教师用户
-    public static final String TEACHER = "3";
 
 
     @Override
@@ -43,19 +36,22 @@ public class SecurityUserDetailService implements UserDetailsService{
         String username = usernameAndUserType[0];
         String userType = usernameAndUserType[1];
 
+        log.info("登录用户类型为:{},用户名为:{}",UserTypeEnum.getUserTypeZh(userType),username);
 
         // 如果账号类型为 [学生]
-        if(userType.equals(STUDENT)){
+        if(userType.equals(UserTypeEnum.STUDENT.getUserType())){
             return studentUserDetailService.loadUserByUsername(username);
         }
 
-        else if(userType.equals(ADMIN)){
-            // 如果账号类型为 [管理员]
+        // 如果账号类型为 [管理员]
+        else if(userType.equals(UserTypeEnum.ADMIN.getUserType())){
+
             return hrService.loadUserByUsername(username);
         }
 
-        else if(userType.equals(TEACHER)){
-            // 如果账号类型为 [教师] TODO
+        // 如果账号类型为 [教师] TODO
+        else if(userType.equals(UserTypeEnum.TEACHER.getUserType())){
+
             return hrService.loadUserByUsername(username);
         }
         else {

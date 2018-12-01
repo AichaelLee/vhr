@@ -17,12 +17,12 @@ import java.security.Principal;
  * CreatedDate: 2018/12/1.
  */
 @Component
-public class LogInterceptor implements HandlerInterceptor {
+public class LogTrackInterceptor implements HandlerInterceptor {
 
     private static final String USER_ID = "userId";
     private static final String SESSION_ID = "sessionId";
     private static final String ANONYMOUS = "未设定用户";
-    private static final Logger LOGGER = LoggerFactory.getLogger(LogInterceptor.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LogTrackInterceptor.class);
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse httpServletResponse, Object o) throws Exception {
