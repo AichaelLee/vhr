@@ -27,8 +27,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
         return Executors.newCachedThreadPool();
     }
 
+    /**
+     * 权限重置Mapper
+     * @return 简单权限映射器
+     */
     @Bean
     public SimpleAuthorityMapper simpleAuthorityMapper(){
         return  new SimpleAuthorityMapper();
     }
+
 }

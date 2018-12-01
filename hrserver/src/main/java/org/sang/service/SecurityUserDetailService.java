@@ -1,5 +1,6 @@
 package org.sang.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,6 +12,7 @@ import org.springframework.util.StringUtils;
  * Created by aichaellee on 2018/11/30.
  */
 @Service
+@Slf4j
 public class SecurityUserDetailService implements UserDetailsService{
 
     @Autowired
@@ -52,9 +54,14 @@ public class SecurityUserDetailService implements UserDetailsService{
             return hrService.loadUserByUsername(username);
         }
 
-        else {
+        else if(userType.equals(TEACHER)){
             // 如果账号类型为 [教师] TODO
             return hrService.loadUserByUsername(username);
+        }
+        else {
+            // 错误的类型，抛出异常
+            log.error("错误的用户类型!");
+            throw new IllegalArgumentException("未知的用户类型:" + userType);
         }
 
 
