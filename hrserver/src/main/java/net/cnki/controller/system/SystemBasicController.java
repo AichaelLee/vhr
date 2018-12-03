@@ -1,16 +1,19 @@
 package net.cnki.controller.system;
 
+import lombok.extern.slf4j.Slf4j;
 import net.cnki.bean.*;
 import net.cnki.common.UserUtils;
-import net.cnki.service.*;
 import net.cnki.mapper.TblPlanMapper;
+import net.cnki.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 系统基本设置
@@ -19,6 +22,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/system/basic")
+@Slf4j
 public class SystemBasicController {
     @Autowired
     RoleService roleService;
@@ -47,43 +51,57 @@ public class SystemBasicController {
     @Autowired
     private SimpleAuthorityMapper simpleAuthorityMapper;
 
-    @RequestMapping(value = "/role/{rid}", method = RequestMethod.DELETE)
-    public RespBean deleteRole(@PathVariable Long rid) {
-        if (roleService.deleteRoleById(rid) == 1) {
-            return RespBean.ok("删除成功!");
-        }
-        return RespBean.error("删除失败!");
+
+
+    /**
+     * 得到所有角色,注意不是查看某用户的所有角色
+     * @return 当前系统存在的所有角色
+     */
+    @RequestMapping("/roles")
+    public List<Role> allRoles() {
+        return roleService.roles();
     }
+
+    @GetMapping("/userRoles")
+    public List<Role> getRolesById(){
+        return roleService.getRolesByUserId(UserUtils.getCurrentHr().getManagers().getId());
+    }
+
 
     @PostMapping(value = "/chooseRole")
     public RespBean chooseRole(@AuthenticationPrincipal Object principal, String choosedRole) throws Exception{
 
         if(principal instanceof ManagersDetails){
-            System.out.println("管理员用户之前的全部角色为"+
-                    ((ManagersDetails) principal).getAuthorities().toString());
+
+            log.info("管理员用户之前的全部角色为{}",((ManagersDetails) principal).getAuthorities().toString());
+
         }else{
-            System.out.println("学生用户之前的全部角色为"+
-                    ((StudentDetails) principal).getAuthorities().toString());
+
+            log.info("学生用户之前的全部角色为{}", ((StudentDetails) principal).getAuthorities().toString());
+
         }
 
 
-        System.out.println("用户选择的角色为:"+choosedRole);
+        log.info("用户选择的角色为:{}",choosedRole);
 
         // 切换用户选择的角色
         restAuthentication.resetUserAuthorities(choosedRole);
 
-        System.out.println("重置之后的角色为:"+SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
+       // log.info("重置之后的角色为:{}",SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
 
 
         List<Role> newRoles = new ArrayList<>();
         // TODO if null
-        UserUtils.getCurrentHr().getManagers().getRoles().stream().forEach(o->{
+        roleService.getRolesByUserId(UserUtils.getCurrentHr().getManagers().getId())
+        .stream().forEach(o->{
             if(o.getName().equals(choosedRole)){
                 newRoles.add(o);
             }
         });
         UserUtils.getCurrentHr().getManagers().setRoles(newRoles);
-        return  RespBean.ok("登录成功!", UserUtils.getCurrentHr().getManagers());
+
+        log.info("重置后拥有的角色总数为{}",UserUtils.getCurrentHr().getManagers().getRoles().size());
+        return  RespBean.ok("", UserUtils.getCurrentHr().getManagers());
     }
 
     /**
@@ -92,20 +110,21 @@ public class SystemBasicController {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = "/switchRole", method = RequestMethod.GET)
-    public RespBean switchRole(@AuthenticationPrincipal ManagersDetails details) throws Exception{
+    @GetMapping(value = "/switchRole")
+    public List<Role> switchRole(@AuthenticationPrincipal ManagersDetails details) throws Exception{
 
-        System.out.println("此时用户权限为"+details.getAuthorities().toString());
+        log.info("此时用户权限为{}",details.getAuthorities().toString());
 
         // 查询数据库,得到用户初始的所有角色返回给前端
 
         List<Role> roles = hrService.getRolesByHrId(details.getManagers().getId());
 
+        return roles;
 
-        UserUtils.getCurrentHr().getManagers().setRoles(roles);
+       // UserUtils.getCurrentHr().getManagers().setRoles(roles);
 
 
-        return RespBean.ok("登录成功!", UserUtils.getCurrentHr().getManagers());
+       // return RespBean.ok("登录成功!", UserUtils.getCurrentHr().getManagers());
     }
 
     /**
@@ -117,9 +136,9 @@ public class SystemBasicController {
         TblPlanExample example = new TblPlanExample();
         example.createCriteria().andPlanIdIsNotNull();
         List<TblPlan> plans = tblPlanMapper.selectByExample(example);
-        System.out.println("---------------"+plans.size());
+        log.info("学年总数为:{}",plans.size());
 
-        return RespBean.ok("获取所有学年成功",plans);
+        return RespBean.ok("",plans);
     }
 
     /**
@@ -143,6 +162,18 @@ public class SystemBasicController {
 
     }
 
+    /**
+     * 删除角色
+     * @param rid
+     * @return
+     */
+    @RequestMapping(value = "/role/{rid}", method = RequestMethod.DELETE)
+    public RespBean deleteRole(@PathVariable Long rid) {
+        if (roleService.deleteRoleById(rid) == 1) {
+            return RespBean.ok("删除成功!");
+        }
+        return RespBean.error("删除失败!");
+    }
 
     /**
      * 添加角色
@@ -182,14 +213,6 @@ public class SystemBasicController {
         return RespBean.error("更新失败!");
     }
 
-    /**
-     * 得到所有角色,注意不是查看某用户的所有角色
-     * @return 当前系统存在的所有角色
-     */
-    @RequestMapping("/roles")
-    public List<Role> allRoles() {
-        return roleService.roles();
-    }
 
     @RequestMapping(value = "/dep", method = RequestMethod.POST)
     public Map<String, Object> addDep(Department department) {

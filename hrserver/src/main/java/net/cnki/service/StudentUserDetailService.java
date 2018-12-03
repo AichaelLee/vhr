@@ -1,5 +1,6 @@
 package net.cnki.service;
 
+import lombok.extern.slf4j.Slf4j;
 import net.cnki.bean.StudentDetails;
 import net.cnki.bean.TblStudentBase;
 import net.cnki.bean.Role;
@@ -20,6 +21,7 @@ import java.util.List;
  */
 @Service
 @Transactional
+@Slf4j
 public class StudentUserDetailService{
 
     @Autowired
@@ -39,12 +41,12 @@ public class StudentUserDetailService{
             // 得到学生的权限(实际上以学生登录只有[学生]这一个角色,但是我们还是要赋予他这个角色)
             List<GrantedAuthority> authorities = new ArrayList<>();
             List<Role> roles = studentService.getRolesByStudentId(studentBase.getSid());
-        System.out.println("--------roelssss"+ roles.size());
+            log.info("该学生权限为:{}", roles.size());
            // List<Role> roles = studentBase.getRoles();
 //            for (Role role : roles) {
 //                authorities.add(new SimpleGrantedAuthority("ROLE_studentsss"));
 //            }
-        authorities.add(new SimpleGrantedAuthority("ROLE_studentsss"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_studentsss"));
             return authorities;
     }
 

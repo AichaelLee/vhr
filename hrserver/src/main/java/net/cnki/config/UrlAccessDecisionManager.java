@@ -1,5 +1,6 @@
 package net.cnki.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
@@ -18,6 +19,7 @@ import java.util.Iterator;
  * CreatedDate: 2018/11/30.
  */
 @Component
+@Slf4j
 public class UrlAccessDecisionManager implements AccessDecisionManager {
     @Override
     public void decide(Authentication auth, Object o, Collection<ConfigAttribute> cas){
@@ -34,7 +36,7 @@ public class UrlAccessDecisionManager implements AccessDecisionManager {
             }
             //当前用户所具有的权限
             Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
-            System.out.println("===================123123"+authorities.toString());
+            // log.info("用户具备的权限:{}",authorities.toString());
             for (GrantedAuthority authority : authorities) {
                 if (authority.getAuthority().equals(needRole)) {
                     return;

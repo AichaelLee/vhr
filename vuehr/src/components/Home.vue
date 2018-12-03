@@ -7,7 +7,7 @@
           <el-badge style="margin-right: 30px" :is-dot="this.$store.state.nfDot">
             <i class="fa fa-bell-o" @click="alert()" style="cursor: pointer"></i>
           </el-badge>
-          <el-button type="button"><i class="el-icon-info">切换</i></el-button>
+          <el-button type="button" @click="swtichRoles"><i class="el-icon-info">切换</i></el-button>
           <el-dropdown @command="handleCommand">
   <span class="el-dropdown-link home_userinfo" style="display: flex;align-items: center">
     {{user.name}} 角色: 学生 院系:计算机学院
@@ -69,6 +69,12 @@ import router from '../router'
     //  this.loadNF();
     },
     methods: {
+      swtichRoles(){
+          this.$router.push({
+            path: '/role', 
+            name: 'Role'
+        })
+      },
       loadNF(){
         var _this = this;
         this.getRequest("/chat/sysmsgs").then(resp=> {

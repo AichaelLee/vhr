@@ -13,6 +13,11 @@
         DELETE FROM role WHERE id=#{rid}
     </delete>
     <select id="getRolesByUserId" resultType="net.cnki.bean.Role">
-        SELECT * FROM role where id=#{userId};
+        select
+        r.*
+        from role r
+        INNER JOIN hr_role hr
+        ON r.id = hr.rid
+        where hr.hrid = #{userId};
     </select>
 </mapper>

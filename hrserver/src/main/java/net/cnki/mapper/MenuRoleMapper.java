@@ -9,4 +9,6 @@ public interface MenuRoleMapper {
     int deleteMenuByRid(@Param("rid") Long rid);
 
     int addMenu(@Param("rid") Long rid, @Param("mids") Long[] mids);
+
+    int addDefaultMid(@Param("rid") Long rid);
 }

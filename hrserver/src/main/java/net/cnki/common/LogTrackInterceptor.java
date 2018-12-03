@@ -29,7 +29,7 @@ public class LogTrackInterceptor implements HandlerInterceptor {
 
         String xForwardedForHeader = request.getHeader("X-Forwarded-For");
         String remoteIp = request.getRemoteAddr();
-        LOGGER.info("client ip:{}, X-Forwarded-For:{}", remoteIp, xForwardedForHeader);
+        //LOGGER.info("client ip:{}, X-Forwarded-For:{}", remoteIp, xForwardedForHeader);
 
         Principal auth = request.getUserPrincipal();
         String userId = "";
@@ -50,7 +50,7 @@ public class LogTrackInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception {
-        LOGGER.info("清除用户ID和SessionID");
+        //LOGGER.info("清除用户ID和SessionID");
         MDC.remove(USER_ID);
         MDC.remove(SESSION_ID);
     }

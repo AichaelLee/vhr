@@ -12,4 +12,8 @@
             (#{mid},#{rid})
         </foreach>
     </insert>
+    <insert id="addDefaultMid">
+        INSERT INTO menu_role(mid,rid) VALUES
+        (29,#{rid})
+    </insert>
 </mapper>

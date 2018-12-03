@@ -2,6 +2,7 @@ package net.cnki.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import net.cnki.bean.Managers;
+import net.cnki.bean.Role;
 import net.cnki.common.UserUtils;
 import net.cnki.service.MenuService;
 import net.cnki.bean.Menu;
@@ -41,7 +42,8 @@ public class ConfigController {
      */
     @GetMapping("/regetMenu")
     public List<Menu> getsyMenu(){
-
+List<Role> rrr = UserUtils.getCurrentHr().getManagers().getRoles();
+        System.out.println("============sadfadf"+rrr.size());
         Long rid = UserUtils.getCurrentHr().getManagers().getRoles().get(0).getId();
         String rzh = UserUtils.getCurrentHr().getManagers().getRoles().get(0).getName();
         log.info("选择用户角色为{},id为:{},该角色拥有的菜单权限为",rzh,rid);

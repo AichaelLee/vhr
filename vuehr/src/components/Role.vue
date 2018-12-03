@@ -69,6 +69,8 @@ import {formatRoutes} from '../utils/utils'
                   store.commit('initMenu', fmtRoutes);
                   store.dispatch('connect');
                 }
+              }).catch(reson=>{
+                alert("reget menu error"+reson)
               })
 
             this.$router.push({
@@ -81,6 +83,8 @@ import {formatRoutes} from '../utils/utils'
         })
 
           }
+        }).catch(reson=>{
+          alert("change role error"+reson)
         })
 
 
@@ -128,7 +132,7 @@ import {formatRoutes} from '../utils/utils'
       },
       
       loadAllRoles(){
-                this.getRequest("/system/basic/roles").then(resp=> {
+                this.getRequest("/system/basic/userRoles").then(resp=> {
         
           if (resp && resp.status == 200) {
              this.roles = resp.data;

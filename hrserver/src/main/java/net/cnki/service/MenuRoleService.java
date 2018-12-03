@@ -19,6 +19,9 @@ public class MenuRoleService {
         if (mids.length == 0) {
             return 0;
         }
+
+        menuRoleMapper.addDefaultMid(rid);
+
         return menuRoleMapper.addMenu(rid, mids);
     }
 }
