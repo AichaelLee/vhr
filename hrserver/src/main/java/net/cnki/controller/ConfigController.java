@@ -42,10 +42,10 @@ public class ConfigController {
      */
     @GetMapping("/regetMenu")
     public List<Menu> getsyMenu(){
-List<Role> rrr = UserUtils.getCurrentHr().getManagers().getRoles();
+List<Role> rrr = UserUtils.getCurrentHr().getRoles();
         System.out.println("============sadfadf"+rrr.size());
-        Long rid = UserUtils.getCurrentHr().getManagers().getRoles().get(0).getId();
-        String rzh = UserUtils.getCurrentHr().getManagers().getRoles().get(0).getName();
+        Long rid = UserUtils.getCurrentHr().getRoles().get(0).getId();
+        String rzh = UserUtils.getCurrentHr().getRoles().get(0).getName();
         log.info("选择用户角色为{},id为:{},该角色拥有的菜单权限为",rzh,rid);
 
         return menuService.getMemusInfoByRid(rid);
@@ -58,6 +58,7 @@ List<Role> rrr = UserUtils.getCurrentHr().getManagers().getRoles();
      */
     @RequestMapping("/hr")
     public Managers currentUser() {
-        return UserUtils.getCurrentHr().getManagers();
+       // return UserUtils.getCurrentHr();
+        return null;
     }
 }

@@ -1,7 +1,6 @@
 package net.cnki.service;
 
 import lombok.extern.slf4j.Slf4j;
-import net.cnki.bean.StudentDetails;
 import net.cnki.bean.TblStudentBase;
 import net.cnki.bean.Role;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,7 @@ public class StudentUserDetailService{
         if (studentBase == null) {
             throw new UsernameNotFoundException("用户名错误");
         }
-        return new StudentDetails(studentBase, getAuthorities(studentBase));
+        return studentBase;
 
     }
 

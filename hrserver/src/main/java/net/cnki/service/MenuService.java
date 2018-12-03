@@ -26,7 +26,7 @@ public class MenuService {
     }
 
     public List<Menu> getMenusByUserId() {
-        return menuMapper.getMenusByUserId(UserUtils.getCurrentHr().getManagers().getId());
+        return menuMapper.getMenusByUserId(UserUtils.getCurrentHr().getId());
        // return null;
     }
 

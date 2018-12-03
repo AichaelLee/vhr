@@ -57,8 +57,14 @@
             var path = _this.$route.query.redirect;
             // _this.$router
             //   .replace({path: path == '/' || path == undefined ? '/Role' : path});
-            _this.$router
+            if(this.loginForm.userType==="2"){
+               _this.$router
               .replace({path: '/Role'});
+            }else {
+               _this.$router
+              .replace({path: '/home'});
+            }
+           
           }
         });
       }
