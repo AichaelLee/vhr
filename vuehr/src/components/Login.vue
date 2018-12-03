@@ -10,8 +10,14 @@
       <el-input type="password" v-model="loginForm.password"
                 auto-complete="off" placeholder="密码"></el-input>
     </el-form-item>
-    <el-checkbox class="login_remember" v-model="checked"
-                 label-position="left">记住密码</el-checkbox>
+      <el-radio-group v-model="loginForm.userType">
+    <el-radio label="1">管理员</el-radio>
+    <el-radio label="2">教师</el-radio>
+    <el-radio label="3">学生</el-radio>
+  </el-radio-group>
+    <!-- <el-checkbox class="login_remember" v-model="checked"
+                 label-position="left">记住密码</el-checkbox> -->
+                 <br>
     <el-form-item style="width: 100%">
       <el-button type="primary" style="width: 100%" @click="submitClick">登录</el-button>
     </el-form-item>
@@ -28,9 +34,11 @@
         checked: true,
         loginForm: {
           username: 'admin',
-          password: '123'
+          password: '123',
+          userType: '2'
         },
         loading: false
+        
       }
     },
     methods: {
@@ -39,7 +47,8 @@
         this.loading = true;
         this.postRequest('/login', {
           username: this.loginForm.username,
-          password: this.loginForm.password
+          password: this.loginForm.password,
+          userType: this.loginForm.userType
         }).then(resp=> {
           _this.loading = false;
           if (resp && resp.status == 200) {

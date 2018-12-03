@@ -16,8 +16,8 @@
         select
         r.*
         from role r
-        INNER JOIN hr_role hr
+        INNER JOIN user_role hr
         ON r.id = hr.rid
-        where hr.hrid = #{userId};
+        where hr.userId = #{userId};
     </select>
 </mapper>

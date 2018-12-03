@@ -9,17 +9,17 @@ public enum UserTypeEnum {
     /**
      * 学生
      */
-    STUDENT("学生","1"),
+    STUDENT("学生","3"),
 
     /**
      * 管理员
      */
-    ADMIN("管理员","2"),
+    ADMIN("管理员","1"),
 
     /**
      * 教师
      */
-    TEACHER("教师","3");
+    TEACHER("教师","2");
 
     private String userTypeZh;
     private String userType;

@@ -19,7 +19,7 @@ public class WwLoggingFilter implements Filter {
 
     private static final String USER_ID = "userId";
     private static final String SESSION_ID = "sessionId";
-    private static final String ANONYMOUS = "未設定";
+    private static final String ANONYMOUS = "未设定";
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

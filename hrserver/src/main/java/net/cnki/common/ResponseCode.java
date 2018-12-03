@@ -1,7 +1,7 @@
 package net.cnki.common;
 
 /**
- * @author aichaellee
+ * @author lizhizhong
  * 自定义响应码
  */
 public enum ResponseCode {

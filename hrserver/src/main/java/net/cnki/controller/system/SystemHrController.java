@@ -25,21 +25,7 @@ public class SystemHrController {
         return hrService.getHrById(hrId);
     }
 
-    @RequestMapping(value = "/{hrId}", method = RequestMethod.DELETE)
-    public RespBean deleteHr(@PathVariable Long hrId) {
-        if (hrService.deleteHr(hrId) == 1) {
-            return RespBean.ok("删除成功!");
-        }
-        return RespBean.error("删除失败!");
-    }
 
-    @RequestMapping(value = "/", method = RequestMethod.PUT)
-    public RespBean updateHr(Hr hr) {
-        if (hrService.updateHr(hr) == 1) {
-            return RespBean.ok("更新成功!");
-        }
-        return RespBean.error("更新失败!");
-    }
 
     @RequestMapping(value = "/roles", method = RequestMethod.PUT)
     public RespBean updateHrRoles(Long hrId, Long[] rids) {

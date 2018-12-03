@@ -69,9 +69,6 @@ public class HrService {
         return hrMapper.getHrsByKeywords(keywords);
     }
 
-    public int updateHr(Hr hr) {
-        return hrMapper.updateHr(hr);
-    }
 
     public int updateHrRoles(Long hrId, Long[] rids) {
         int i = hrMapper.deleteRoleByHrId(hrId);
@@ -82,18 +79,11 @@ public class HrService {
         return hrMapper.getHrById(hrId);
     }
 
-    public int deleteHr(Long hrId) {
-        return hrMapper.deleteHr(hrId);
-    }
 
     public List<Role> getRolesByHrId(Long id){
         return hrMapper.getRolesByHrId(id);
     }
 
-    public List<Hr> getAllHrExceptAdmin() {
-        //return hrMapper.getAllHr(UserUtils.getCurrentHr().getManagers());
-        return null;
-    }
     public List<Hr> getAllHr() {
         return hrMapper.getAllHr(null);
     }

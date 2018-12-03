@@ -46,7 +46,7 @@ public class StudentUserDetailService{
 //            for (Role role : roles) {
 //                authorities.add(new SimpleGrantedAuthority("ROLE_studentsss"));
 //            }
-            authorities.add(new SimpleGrantedAuthority("ROLE_studentsss"));
+            authorities.add(new SimpleGrantedAuthority("ROLE_student"));
             return authorities;
     }
 

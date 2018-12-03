@@ -35,7 +35,7 @@ public class SecurityUserDetailService implements UserDetailsService{
         }
         String username = usernameAndUserType[0];
         String userType = usernameAndUserType[1];
-
+        System.out.println("登录用户类型为:{},mingziwei {}"+username+userType);
         log.info("登录用户类型为:{},用户名为:{}",UserTypeEnum.getUserTypeZh(userType),username);
 
         // 如果账号类型为 [学生]
@@ -57,10 +57,10 @@ public class SecurityUserDetailService implements UserDetailsService{
         else {
             //TODO 前台暂时没有改,所有先不用抛出异常
 
-            return hrService.loadUserByUsername(username);
+            //return hrService.loadUserByUsername(username);
             // 错误的类型，抛出异常
-            //log.error("错误的用户类型!");
-            //throw new IllegalArgumentException("未知的用户类型:" + userType);
+            log.error("错误的用户类型!");
+            throw new IllegalArgumentException("未知的用户类型:" + userType);
         }
 
 

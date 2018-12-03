@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.User;
 import java.util.Collection;
 
 /**
- * Created by aichaellee on 2018/11/28.
+ * Created by aichaellee on 2018/11/26.
  */
 public class ManagersDetails extends User {
 
