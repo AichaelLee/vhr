@@ -10,10 +10,7 @@ import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 系统基本设置
@@ -77,9 +74,15 @@ public class SystemBasicController {
 
         System.out.println("重置之后的角色为:"+SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
 
-        Role newRole = new Role();
-        newRole.setName(choosedRole);
-        UserUtils.getCurrentHr().getManagers().setRoles(Arrays.asList(newRole));
+
+        List<Role> newRoles = new ArrayList<>();
+        // TODO if null
+        UserUtils.getCurrentHr().getManagers().getRoles().stream().forEach(o->{
+            if(o.getName().equals(choosedRole)){
+                newRoles.add(o);
+            }
+        });
+        UserUtils.getCurrentHr().getManagers().setRoles(newRoles);
         return  RespBean.ok("登录成功!", UserUtils.getCurrentHr().getManagers());
     }
 

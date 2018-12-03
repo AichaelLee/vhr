@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * Created by sang on 2017/12/28.
+ * Created by lizhizhong on 2018/11/28.
  */
 @Service
 @Transactional
@@ -25,8 +25,8 @@ public class MenuService {
         return menuMapper.getAllMenu();
     }
 
-    public List<Menu> getMenusByHrId() {
-        return menuMapper.getMenusByHrId(UserUtils.getCurrentHr().getManagers().getId());
+    public List<Menu> getMenusByUserId() {
+        return menuMapper.getMenusByUserId(UserUtils.getCurrentHr().getManagers().getId());
        // return null;
     }
 
@@ -36,5 +36,10 @@ public class MenuService {
 
     public List<Long> getMenusByRid(Long rid) {
         return menuMapper.getMenusByRid(rid);
+    }
+
+
+    public List<Menu> getMemusInfoByRid(Long rid){
+        return menuMapper.getMemusInfoByRid(rid);
     }
 }

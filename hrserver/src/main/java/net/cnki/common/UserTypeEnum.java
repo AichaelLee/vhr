@@ -51,5 +51,9 @@ public enum UserTypeEnum {
         return null;
     }
 
+    public static void main(String[] args) {
+        String aa = UserTypeEnum.STUDENT.getUserType();
+        System.out.println("---------"+aa);
+    }
 
 }
