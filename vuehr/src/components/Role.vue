@@ -35,6 +35,10 @@
              
 </template>
 <script>
+import router from '../router'
+import store from '../store'
+import {initMenu} from '../utils/utils'
+import {formatRoutes} from '../utils/utils'
   export default{
     mounted: function () {
       this.loadAllRoles()
@@ -47,7 +51,6 @@
         // this.$router
         //       .push({path: path == '/' || path == undefined ? '/home' : path, params: {role: "value"}});
        // this.$router.push({name: '/home', params: {role: value}})
-alert(value)
 
        this.postRequest("/system/basic/chooseRole",{
          choosedRole:value
@@ -55,7 +58,18 @@ alert(value)
         
           if (resp && resp.status == 200) {
             this.$store.commit('login', resp.data.obj);
-            alert(Object.entries(resp.data.obj.roles))
+            
+            // 根据所选角色重新初始化菜单项
+            //initMenu(router, store);
+              this.getRequest("/config/regetMenu").then(resp=> {
+                if (resp && resp.status == 200) {
+                  var fmtRoutes = formatRoutes(resp.data);
+                  router.addRoutes(fmtRoutes);
+                  console.log(fmtRoutes)
+                  store.commit('initMenu', fmtRoutes);
+                  store.dispatch('connect');
+                }
+              })
 
             this.$router.push({
             path: '/', 
