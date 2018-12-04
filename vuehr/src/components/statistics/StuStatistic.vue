@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>
-      CNKI page5
+      CNKI-GM 学生数据统计
     </h1>
   </div>
 </template>

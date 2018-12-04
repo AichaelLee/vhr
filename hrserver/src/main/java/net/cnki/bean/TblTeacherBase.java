@@ -56,6 +56,8 @@ public class TblTeacherBase extends UserBase implements UserDetails {
 
     private List<Role> roles;
 
+    private Integer planId;
+
     private static final long serialVersionUID = 1L;
 
 

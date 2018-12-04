@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h5>CNKI GM</h5>
+    <h1>CNKI-GM查看中期检查</h1>
   </div>
 </template>
-

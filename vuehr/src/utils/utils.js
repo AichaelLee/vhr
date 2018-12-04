@@ -40,16 +40,17 @@ export const formatRoutes = (routes)=> {
     }
     let fmRouter = {
       path: path,
+      // page 重构这部分，改变为一个标准点的前台架构
       component(resolve){
         if (component.startsWith("Home")) {
           require(['../components/' + component + '.vue'], resolve)
-        } else if (component.startsWith("Emp")) {
-          require(['../components/emp/' + component + '.vue'], resolve)
-        } else if (component.startsWith("Per")) {
-          require(['../components/personnel/' + component + '.vue'], resolve)
-        } else if (component.startsWith("Sal")) {
-          require(['../components/salary/' + component + '.vue'], resolve)
-        } else if (component.startsWith("Sta")) {
+        } else if (component.startsWith("Th")) {
+          require(['../components/thesis/' + component + '.vue'], resolve)
+        } else if (component.startsWith("No")) {
+          require(['../components/general/' + component + '.vue'], resolve)
+        } else if (component.startsWith("Ac")) {
+          require(['../components/account/' + component + '.vue'], resolve)
+        } else if (component.startsWith("St")) {
           require(['../components/statistics/' + component + '.vue'], resolve)
         } else if (component.startsWith("Sys")) {
           require(['../components/system/' + component + '.vue'], resolve)

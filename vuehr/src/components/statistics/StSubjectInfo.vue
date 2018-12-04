@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>
-      CNKI page111
+      CNKI-GM 查看课题信息
     </h1>
   </div>
 </template>

@@ -1,5 +1,5 @@
 <template>
   <div>
-    CNKI   !
+    CNKI-GM前期工作检查！
   </div>
 </template>
