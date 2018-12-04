@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.cnki.mapper.HrMapper">
-    <resultMap id="BaseResultMap" type="net.cnki.bean.Managers2">
+    <resultMap id="BaseResultMap" type="net.cnki.bean.Managers">
         <id column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="phone" property="phone"/>
@@ -15,11 +15,11 @@
         <result column="userface" property="userface"/>
         <result column="remark" property="remark"/>
     </resultMap>
-    <resultMap id="lazyLoadRoles" type="net.cnki.bean.Managers2" extends="BaseResultMap">
+    <resultMap id="lazyLoadRoles" type="net.cnki.bean.Managers" extends="BaseResultMap">
         <collection property="roles" ofType="net.cnki.bean.Role" select="net.cnki.mapper.HrMapper.getRolesByHrId"
                     column="id"></collection>
     </resultMap>
-    <resultMap id="eagerLoadRoles" type="net.cnki.bean.Managers2" extends="BaseResultMap">
+    <resultMap id="eagerLoadRoles" type="net.cnki.bean.Managers" extends="BaseResultMap">
         <collection property="roles" ofType="net.cnki.bean.Role">
             <id property="id" column="rid"/>
             <result property="name" column="rname"/>
@@ -57,10 +57,4 @@
             (#{userId},#{rid})
         </foreach>
     </insert>
-    <select id="getAllHr" resultType="net.cnki.bean.Hr">
-        select * from managers
-        <if test="currentId!=null">
-            WHERE id !=#{currentId}
-        </if>
-    </select>
 </mapper>

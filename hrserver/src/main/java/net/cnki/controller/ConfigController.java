@@ -1,11 +1,10 @@
 package net.cnki.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import net.cnki.bean.Managers2;
+import net.cnki.bean.Menu;
 import net.cnki.bean.Role;
 import net.cnki.common.UserUtils;
 import net.cnki.service.MenuService;
-import net.cnki.bean.Menu;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,13 +51,5 @@ List<Role> rrr = UserUtils.getCurrentUser().getRoles();
 
     }
 
-    /**
-     * 获取当前登录用户的详细信息
-     * @return 当前用户
-     */
-    @RequestMapping("/hr")
-    public Managers2 currentUser() {
 
-        return null;
-    }
 }

@@ -1,6 +1,5 @@
 package net.cnki.mapper;
 
-import net.cnki.bean.Hr;
 import net.cnki.bean.Managers;
 import net.cnki.bean.Role;
 import org.apache.ibatis.annotations.Param;
@@ -18,7 +17,7 @@ public interface ManagersMapper {
 
     int addRolesForManager(@Param("userId") Long hrId, @Param("rids") Long[] rids);
 
-    Hr getManagerById(Long hrId);
+    Managers getManagerById(Long hrId);
 
-    List<Hr> getAllManagers(@Param("currentId") Long currentId);
+    List<Managers> getAllManagers(@Param("currentId") Long currentId);
 }

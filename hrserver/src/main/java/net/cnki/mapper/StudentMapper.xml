@@ -11,20 +11,22 @@
         <result column="student_num" property="studentNum"/>
         <result column="student_name" property="studentName"/>
     </resultMap>
-    <resultMap id="lazyLoadRoles" type="net.cnki.bean.TblStudentBase" extends="BaseResultMap">
-    </resultMap>
-    <resultMap id="eagerLoadRoles" type="net.cnki.bean.Managers2" extends="BaseResultMap">
-        <collection property="roles" ofType="net.cnki.bean.Role">
-            <id property="id" column="rid"/>
-            <result property="name" column="rname"/>
-            <result property="nameZh" column="rnameZh"/>
+    <!--<resultMap id="lazyLoadRoles" type="net.cnki.bean.TblStudentBase" extends="BaseResultMap">-->
+    <!--</resultMap>-->
+    <resultMap id="eagerLoadRoles" type="net.cnki.bean.TblStudentBase" extends="BaseResultMap">
+        <collection property="roles" ofType="net.cnki.bean.Role"
+                    select="net.cnki.mapper.StudentMapper.getRolesByStudentId"
+                    column="sid" >
+            <!--<id property="id" column="rid"/>-->
+            <!--<result property="name" column="rname"/>-->
+            <!--<result property="nameZh" column="rnameZh"/>-->
         </collection>
     </resultMap>
-    <select id="loadUserByUsername" resultMap="lazyLoadRoles">
+    <select id="loadUserByUsername" resultMap="eagerLoadRoles">
         select * from tbl_student_base WHERE username=#{username};
     </select>
     <select id="getRolesByStudentId" resultType="net.cnki.bean.Role">
-        SELECT r.* FROM user_role h,role r where h.rid=r.id AND h.userId=#{id}
+        SELECT r.id as id,r.name as name,r.nameZh as nameZh FROM user_role h,role r where h.rid=r.id AND h.userId=#{id}
     </select>
 
 </mapper>

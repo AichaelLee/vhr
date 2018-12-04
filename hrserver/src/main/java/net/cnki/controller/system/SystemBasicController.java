@@ -65,9 +65,9 @@ public class SystemBasicController {
     @PostMapping(value = "/chooseRole")
     public RespBean chooseRole(@AuthenticationPrincipal Object principal, String choosedRole) throws Exception{
 
-        if(principal instanceof Managers2){
+        if(principal instanceof Managers){
 
-            log.info("管理员用户之前的全部角色为{}",((Managers2) principal).getAuthorities().toString());
+            log.info("管理员用户之前的全部角色为{}",((Managers) principal).getAuthorities().toString());
 
         }else if(principal instanceof TblTeacherBase){
             log.info("教师角色为:{}",((TblTeacherBase) principal).getAuthorities().toString());
@@ -108,7 +108,7 @@ public class SystemBasicController {
      * @throws Exception
      */
     @GetMapping(value = "/switchRole")
-    public List<Role> switchRole(@AuthenticationPrincipal Managers2 details) throws Exception{
+    public List<Role> switchRole(@AuthenticationPrincipal Managers details) throws Exception{
 
         log.info("此时用户权限为{}",details.getAuthorities().toString());
 
@@ -144,8 +144,8 @@ public class SystemBasicController {
     @GetMapping(value="/getSwitchAuth")
     public RespBean getSwitchAuth(@AuthenticationPrincipal Object principal){
         RespBean respBean = null;
-        if(principal instanceof Managers2){
-            respBean =RespBean.ok("选择角色成功!",  ((Managers2) principal));;
+        if(principal instanceof Managers){
+            respBean =RespBean.ok("选择角色成功!",  ((Managers) principal));;
         }else{
             respBean =RespBean.ok("选择角色成功!",  ((TblStudentBase) principal));
         }

@@ -54,7 +54,7 @@
         </collection>
     </resultMap>
     <select id="loadUserByUsername" resultMap="lazyLoadRoles">
-        select * from managers_rea WHERE username=#{username};
+        select * from managers WHERE username=#{username};
     </select>
     <select id="getRolesByManagerId" resultType="net.cnki.bean.Role">
         SELECT r.* FROM user_role h,role r where h.rid=r.id AND h.userId=#{id}
