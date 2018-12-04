@@ -5,6 +5,7 @@ import net.cnki.bean.Menu;
 import net.cnki.mapper.MenuMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,24 +22,26 @@ public class MenuService {
     MenuMapper menuMapper;
 
 //    @Cacheable(key = "#root.methodName")
+    @Cacheable(key = "#root.methodName")
     public List<Menu> getAllMenu(){
         return menuMapper.getAllMenu();
     }
-
+    @Cacheable(key = "#root.methodName")
     public List<Menu> getMenusByUserId() {
         return menuMapper.getMenusByUserId(UserUtils.getCurrentUser().getId());
        // return null;
     }
-
+    @Cacheable(key = "#root.methodName")
     public List<Menu> menuTree() {
         return menuMapper.menuTree();
     }
 
+    @Cacheable(key = "#root.methodName")
     public List<Long> getMenusByRid(Long rid) {
         return menuMapper.getMenusByRid(rid);
     }
 
-
+    @Cacheable(key = "#root.methodName")
     public List<Menu> getMemusInfoByRid(Long rid){
         return menuMapper.getMemusInfoByRid(rid);
     }

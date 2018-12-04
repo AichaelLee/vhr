@@ -11,13 +11,14 @@ import org.springframework.aop.support.JdkRegexpMethodPointcut;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * Druid可视化监控配置
  * @author: lizhizhong
  * CreatedDate: 2018/11/29.
  */
-//@Configuration
+@Configuration
 public class DruidConfig {
 
     /**

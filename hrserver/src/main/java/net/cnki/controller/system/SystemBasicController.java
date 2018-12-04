@@ -3,9 +3,12 @@ package net.cnki.controller.system;
 import lombok.extern.slf4j.Slf4j;
 import net.cnki.bean.*;
 import net.cnki.common.UserUtils;
+import net.cnki.common.fw.LogType;
+import net.cnki.common.fw.annotation.SystemLog;
 import net.cnki.mapper.TblPlanMapper;
 import net.cnki.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
 import org.springframework.web.bind.annotation.*;
@@ -57,24 +60,32 @@ public class SystemBasicController {
     }
 
     @GetMapping("/userRoles")
+    @SystemLog(type = LogType.AUDITING,description = "得到用户拥有的所有角色")
     public List<Role> getRolesById(){
         return roleService.getRolesByUserId(UserUtils.getCurrentUser().getId());
     }
 
 
     @PostMapping(value = "/chooseRole")
+    @SystemLog(type = LogType.AUDITING,description = "选择角色")
     public RespBean chooseRole(@AuthenticationPrincipal Object principal, String choosedRole) throws Exception{
 
         if(principal instanceof Managers){
 
             log.info("管理员用户之前的全部角色为{}",((Managers) principal).getAuthorities().toString());
 
+            // 根据需求决定
+            return RespBean.error("管理员不需要选择角色!");
+
         }else if(principal instanceof TblTeacherBase){
             log.info("教师角色为:{}",((TblTeacherBase) principal).getAuthorities().toString());
+
         }
         else{
 
             log.info("学生用户之前的全部角色为{}", ((TblStudentBase) principal).getAuthorities().toString());
+            // 根据需求决定
+            return RespBean.error("学生不需要选择角色!");
 
         }
 
@@ -83,8 +94,6 @@ public class SystemBasicController {
 
         // 切换用户选择的角色
         restAuthentication.resetUserAuthorities(choosedRole);
-
-       // log.info("重置之后的角色为:{}",SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString());
 
 
         List<Role> newRoles = new ArrayList<>();
@@ -95,9 +104,9 @@ public class SystemBasicController {
                 newRoles.add(o);
             }
         });
+
         UserUtils.getCurrentUser().setRoles(newRoles);
 
-        log.info("重置后拥有的角色总数为{}",UserUtils.getCurrentUser().getRoles().size());
         return  RespBean.ok("", UserUtils.getCurrentUser());
     }
 
@@ -125,6 +134,7 @@ public class SystemBasicController {
      * @return
      */
     @GetMapping(value="/getPlans")
+    @Cacheable("getPlans")
     public RespBean getPlans(){
         TblPlanExample example = new TblPlanExample();
         example.createCriteria().andPlanIdIsNotNull();

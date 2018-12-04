@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.cnki.bean.Menu;
 import net.cnki.bean.Role;
 import net.cnki.common.UserUtils;
+import net.cnki.common.fw.LogType;
+import net.cnki.common.fw.annotation.SystemLog;
 import net.cnki.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,8 +42,10 @@ public class ConfigController {
      * @return 菜单项
      */
     @GetMapping("/regetMenu")
+    @SystemLog(type = LogType.AUDITING,description = "获取系统菜单")
     public List<Menu> getsyMenu(){
-List<Role> rrr = UserUtils.getCurrentUser().getRoles();
+
+        List<Role> rrr = UserUtils.getCurrentUser().getRoles();
         System.out.println("============sadfadf"+rrr.size());
         Long rid = UserUtils.getCurrentUser().getRoles().get(0).getId();
         String rzh = UserUtils.getCurrentUser().getRoles().get(0).getName();
