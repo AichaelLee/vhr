@@ -13,7 +13,7 @@
     </resultMap>
     <resultMap id="lazyLoadRoles" type="net.cnki.bean.TblStudentBase" extends="BaseResultMap">
     </resultMap>
-    <resultMap id="eagerLoadRoles" type="net.cnki.bean.Managers" extends="BaseResultMap">
+    <resultMap id="eagerLoadRoles" type="net.cnki.bean.Managers2" extends="BaseResultMap">
         <collection property="roles" ofType="net.cnki.bean.Role">
             <id property="id" column="rid"/>
             <result property="name" column="rname"/>

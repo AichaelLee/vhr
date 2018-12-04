@@ -1,6 +1,6 @@
 package net.cnki.mapper;
 
-import net.cnki.bean.Managers;
+import net.cnki.bean.Managers2;
 import org.apache.ibatis.annotations.Param;
 import net.cnki.bean.Hr;
 import net.cnki.bean.Role;
@@ -11,7 +11,7 @@ import java.util.List;
  * Created by sang on 2017/12/28.
  */
 public interface HrMapper {
-    Managers loadUserByUsername(String username);
+    Managers2 loadUserByUsername(String username);
 
     List<Role> getRolesByHrId(Long id);
 

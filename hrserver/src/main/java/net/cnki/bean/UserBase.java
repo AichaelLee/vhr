@@ -11,5 +11,5 @@ import java.util.List;
 @Data
 public class UserBase {
     public Long id;
-    protected List<Role> roles;
+    public List<Role> roles;
 }

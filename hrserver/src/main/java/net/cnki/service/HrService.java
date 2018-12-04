@@ -1,7 +1,7 @@
 package net.cnki.service;
 
 import net.cnki.bean.Hr;
-import net.cnki.bean.Managers;
+import net.cnki.bean.Managers2;
 import net.cnki.bean.Role;
 import net.cnki.mapper.HrMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class HrService {
 
 
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        Managers managers = hrMapper.loadUserByUsername(s);
+        Managers2 managers = hrMapper.loadUserByUsername(s);
         if (managers == null) {
             throw new UsernameNotFoundException("用户名不对");
         }
@@ -40,7 +40,7 @@ public class HrService {
 
 
 
-    protected Collection<GrantedAuthority> getAuthorities(Managers users) {
+    protected Collection<GrantedAuthority> getAuthorities(Managers2 users) {
 
         if (users != null) {
 

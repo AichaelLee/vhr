@@ -10,14 +10,14 @@ import java.util.Collection;
  */
 public class ManagersDetails extends User {
 
-    private final Managers managers;
+    private final Managers2 managers;
 
-    public ManagersDetails(Managers hr, Collection<? extends GrantedAuthority> authorities){
+    public ManagersDetails(Managers2 hr, Collection<? extends GrantedAuthority> authorities){
         super(hr.getName(),hr.getPassword(),authorities);
         this.managers = hr;
     }
 
-    public Managers getManagers(){
+    public Managers2 getManagers(){
         return managers;
     }
 

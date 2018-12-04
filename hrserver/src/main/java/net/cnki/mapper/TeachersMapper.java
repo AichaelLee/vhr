@@ -1,7 +1,7 @@
 package net.cnki.mapper;
 
 import net.cnki.bean.Role;
-import net.cnki.bean.TeacherBase;
+import net.cnki.bean.TblTeacherBase;
 
 import java.util.List;
 
@@ -10,9 +10,10 @@ import java.util.List;
  */
 public interface TeachersMapper {
 
-    TeacherBase loadUserByUsername(String username);
+    TblTeacherBase loadUserByUsername(String username);
 
-    List<Role> getRolesByStudentId(Integer id);
+    List<Role> getRolesByTeacherId(Long TID);
+    List<Role> getTeacherById();
 
 
 }

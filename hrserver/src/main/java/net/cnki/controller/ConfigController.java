@@ -1,7 +1,7 @@
 package net.cnki.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import net.cnki.bean.Managers;
+import net.cnki.bean.Managers2;
 import net.cnki.bean.Role;
 import net.cnki.common.UserUtils;
 import net.cnki.service.MenuService;
@@ -42,10 +42,10 @@ public class ConfigController {
      */
     @GetMapping("/regetMenu")
     public List<Menu> getsyMenu(){
-List<Role> rrr = UserUtils.getCurrentHr().getRoles();
+List<Role> rrr = UserUtils.getCurrentUser().getRoles();
         System.out.println("============sadfadf"+rrr.size());
-        Long rid = UserUtils.getCurrentHr().getRoles().get(0).getId();
-        String rzh = UserUtils.getCurrentHr().getRoles().get(0).getName();
+        Long rid = UserUtils.getCurrentUser().getRoles().get(0).getId();
+        String rzh = UserUtils.getCurrentUser().getRoles().get(0).getName();
         log.info("选择用户角色为{},id为:{},该角色拥有的菜单权限为",rzh,rid);
 
         return menuService.getMemusInfoByRid(rid);
@@ -57,8 +57,8 @@ List<Role> rrr = UserUtils.getCurrentHr().getRoles();
      * @return 当前用户
      */
     @RequestMapping("/hr")
-    public Managers currentUser() {
-       // return UserUtils.getCurrentHr();
+    public Managers2 currentUser() {
+
         return null;
     }
 }

@@ -58,18 +58,21 @@ public class SystemBasicController {
 
     @GetMapping("/userRoles")
     public List<Role> getRolesById(){
-        return roleService.getRolesByUserId(UserUtils.getCurrentHr().getId());
+        return roleService.getRolesByUserId(UserUtils.getCurrentUser().getId());
     }
 
 
     @PostMapping(value = "/chooseRole")
     public RespBean chooseRole(@AuthenticationPrincipal Object principal, String choosedRole) throws Exception{
 
-        if(principal instanceof Managers){
+        if(principal instanceof Managers2){
 
-            log.info("管理员用户之前的全部角色为{}",((Managers) principal).getAuthorities().toString());
+            log.info("管理员用户之前的全部角色为{}",((Managers2) principal).getAuthorities().toString());
 
-        }else{
+        }else if(principal instanceof TblTeacherBase){
+            log.info("教师角色为:{}",((TblTeacherBase) principal).getAuthorities().toString());
+        }
+        else{
 
             log.info("学生用户之前的全部角色为{}", ((TblStudentBase) principal).getAuthorities().toString());
 
@@ -86,16 +89,16 @@ public class SystemBasicController {
 
         List<Role> newRoles = new ArrayList<>();
         // TODO if null
-        roleService.getRolesByUserId(UserUtils.getCurrentHr().getId())
+        roleService.getRolesByUserId(UserUtils.getCurrentUser().getId())
         .stream().forEach(o->{
             if(o.getName().equals(choosedRole)){
                 newRoles.add(o);
             }
         });
-        UserUtils.getCurrentHr().setRoles(newRoles);
+        UserUtils.getCurrentUser().setRoles(newRoles);
 
-        log.info("重置后拥有的角色总数为{}",UserUtils.getCurrentHr().getRoles().size());
-        return  RespBean.ok("", UserUtils.getCurrentHr());
+        log.info("重置后拥有的角色总数为{}",UserUtils.getCurrentUser().getRoles().size());
+        return  RespBean.ok("", UserUtils.getCurrentUser());
     }
 
     /**
@@ -105,7 +108,7 @@ public class SystemBasicController {
      * @throws Exception
      */
     @GetMapping(value = "/switchRole")
-    public List<Role> switchRole(@AuthenticationPrincipal Managers details) throws Exception{
+    public List<Role> switchRole(@AuthenticationPrincipal Managers2 details) throws Exception{
 
         log.info("此时用户权限为{}",details.getAuthorities().toString());
 
@@ -115,10 +118,6 @@ public class SystemBasicController {
 
         return roles;
 
-       // UserUtils.getCurrentHr().getManagers().setRoles(roles);
-
-
-       // return RespBean.ok("登录成功!", UserUtils.getCurrentHr().getManagers());
     }
 
     /**
@@ -145,8 +144,8 @@ public class SystemBasicController {
     @GetMapping(value="/getSwitchAuth")
     public RespBean getSwitchAuth(@AuthenticationPrincipal Object principal){
         RespBean respBean = null;
-        if(principal instanceof Managers){
-            respBean =RespBean.ok("选择角色成功!",  ((Managers) principal));;
+        if(principal instanceof Managers2){
+            respBean =RespBean.ok("选择角色成功!",  ((Managers2) principal));;
         }else{
             respBean =RespBean.ok("选择角色成功!",  ((TblStudentBase) principal));
         }

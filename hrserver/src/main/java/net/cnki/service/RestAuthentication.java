@@ -1,6 +1,6 @@
 package net.cnki.service;
 
-import net.cnki.bean.Managers;
+import net.cnki.bean.Managers2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -47,7 +47,7 @@ public class RestAuthentication {
     }
 
 
-    private Collection<GrantedAuthority> getAuthorities(Managers users) {
+    private Collection<GrantedAuthority> getAuthorities(Managers2 users) {
 
         if (users != null) {
 

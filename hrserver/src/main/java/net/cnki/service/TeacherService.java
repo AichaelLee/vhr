@@ -1,25 +1,28 @@
 package net.cnki.service;
 
 import net.cnki.bean.Role;
-import net.cnki.bean.TeacherBase;
+import net.cnki.bean.TblTeacherBase;
 import net.cnki.mapper.TeachersMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * Created by aichaellee on 2018/11/30.
  */
+@Service
 public class TeacherService {
 
     @Autowired
-    TeachersMapper studentMapper;
+    TeachersMapper teachersMapper;
 
-    public TeacherBase loadStudentByUsername(String username){
-        return studentMapper.loadUserByUsername(username);
+    public TblTeacherBase loadTeachertByName(String username){
+        return teachersMapper.loadUserByUsername(username);
     }
 
-    public List<Role> getRolesByStudentId(Integer id){
-        return studentMapper.getRolesByStudentId(id);
+    public List<Role> getRolesByTeacherId(Long id){
+
+        return teachersMapper.getRolesByTeacherId(id);
     }
 }

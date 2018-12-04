@@ -1,9 +1,7 @@
 package net.cnki.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.cnki.bean.Managers;
-import net.cnki.bean.RespBean;
-import net.cnki.bean.TblStudentBase;
+import net.cnki.bean.*;
 import net.cnki.common.CustomUserTypeAuthenticationFilter;
 import net.cnki.service.SecurityUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,7 +124,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
             Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             if(principal instanceof Managers){
-                respBean =RespBean.ok("登录成功!",  ((Managers) principal));;
+                respBean =RespBean.ok("登录成功!",  ((Managers) principal));
+            }else if(principal instanceof TblTeacherBase){
+                respBean =RespBean.ok("登录成功!",  ((TblTeacherBase) principal));
             }else{
                 respBean =RespBean.ok("登录成功!",  ((TblStudentBase) principal));
             }

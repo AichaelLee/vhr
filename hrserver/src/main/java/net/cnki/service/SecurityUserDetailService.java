@@ -23,6 +23,12 @@ public class SecurityUserDetailService implements UserDetailsService{
     @Autowired
     HrService hrService;
 
+    @Autowired
+    ManagerUserDetailService managerUserDetailService;
+
+    @Autowired
+    TeacherUserDetailService teacherUserDetailService;
+
 
 
     @Override
@@ -35,7 +41,7 @@ public class SecurityUserDetailService implements UserDetailsService{
         }
         String username = usernameAndUserType[0];
         String userType = usernameAndUserType[1];
-        System.out.println("登录用户类型为:{},mingziwei {}"+username+userType);
+
         log.info("登录用户类型为:{},用户名为:{}",UserTypeEnum.getUserTypeZh(userType),username);
 
         // 如果账号类型为 [学生]
@@ -46,13 +52,15 @@ public class SecurityUserDetailService implements UserDetailsService{
         // 如果账号类型为 [管理员]
         else if(userType.equals(UserTypeEnum.ADMIN.getUserType())){
 
-            return hrService.loadUserByUsername(username);
+            return managerUserDetailService.loadUserByUsername(username);
         }
 
-        // 如果账号类型为 [教师] TODO
+        // 如果账号类型为 [教师]
         else if(userType.equals(UserTypeEnum.TEACHER.getUserType())){
 
-            return hrService.loadUserByUsername(username);
+            return teacherUserDetailService.loadUserByUsername(username);
+
+            //return hrService.loadUserByUsername(username);
         }
         else {
             //TODO 前台暂时没有改,所有先不用抛出异常

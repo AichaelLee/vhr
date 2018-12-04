@@ -7,10 +7,12 @@
           <el-badge style="margin-right: 30px" :is-dot="this.$store.state.nfDot">
             <i class="fa fa-bell-o" @click="alert()" style="cursor: pointer"></i>
           </el-badge>
-          <el-button type="button" @click="swtichRoles"><i class="el-icon-info">切换</i></el-button>
+           <el-button @click="swtichRoles"  icon="el-icon-d-caretr" size="small">切换</el-button>
+           &nbsp;&nbsp;&nbsp;&nbsp;         
+          <!-- <el-button type="button" ><i @click="swtichRoles" class="fa fa-spinner">切换</i></el-button> -->
           <el-dropdown @command="handleCommand">
   <span class="el-dropdown-link home_userinfo" style="display: flex;align-items: center">
-    {{user.name}} 角色: 学生 院系:计算机学院
+     角色: {{role_zh}} / 院系:计算机学院
     <i><img v-if="user.userface!=''" :src="user.userface"
             style="width: 40px;height: 40px;margin-right: 5px;margin-left: 5px;border-radius: 40px"/></i>
   </span>
@@ -63,6 +65,7 @@ import router from '../router'
   export default{
     
     mounted: function () {
+     this.role_zh = this.$store.state.user.roles[0].nameZh
     // alert(this.$route.params.role)
      // alert(Object.entries(this.$route.params.role))
 //      this.devMsg();
@@ -73,18 +76,6 @@ import router from '../router'
           this.$router.push({
             path: '/role', 
             name: 'Role'
-        })
-      },
-      loadNF(){
-        var _this = this;
-        this.getRequest("/chat/sysmsgs").then(resp=> {
-          var isDot = false;
-          resp.data.forEach(msg=> {
-            if (msg.state == 0) {
-              isDot = true;
-            }
-          })
-          _this.$store.commit('toggleNFDot', isDot);
         })
       },
       devMsg(){
@@ -122,7 +113,8 @@ import router from '../router'
     },
     data(){
       return {
-        isDot: false
+        isDot: false,
+        role_zh:''
       }
     },
     computed: {

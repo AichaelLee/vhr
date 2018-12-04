@@ -1,6 +1,7 @@
 package net.cnki.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,90 +11,61 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-public class Managers extends UserBase implements UserDetails {
 
+@Data
+public class TblTeacherBase extends UserBase implements UserDetails {
     private Long id;
 
-    private String username;
+    private String uername;
 
     private String password;
 
-    private String name;
+    private Integer schoolNum;
+
+    private Integer teacherNum;
+
+    private String teacherName;
+
+    private String academicDegree;
+
+    private String graduatedUniversity;
+
+    private String title;
+
+    private String education;
+
+    private Byte sex;
+
+    private Integer age;
 
     private String mobile;
 
     private String email;
 
-    private Integer schoolNumber;
-
-    private Integer serversNumber;
-
-    private String loginIp;
-
-    private Integer authority;
-
-    private Integer status;
-
-    private Date expireDate;
+    private String status;
 
     private String loginToken;
 
-    private String prefix;
+    private Date createTime;
 
-    private String verifyUsername;
+    private String cid;
 
-    private String verifyPassword;
+    private String appKey;
 
-    private String token;
-
-    private String dbIp;
-
-    private String dbName;
-
-    private String verifyUsername2;
-
-    private String verifyPassword2;
-
-    private String verifyAddress2;
-
-    private Date createtime;
-
-    private Date lastmodifytime;
-
-    private Integer displayScname;
-
-    private Integer openScrivener;
-
-    private Date openScrivenerTime;
-
-    private Integer groupNumber;
-
-    private String sysName;
-
-    private Integer exportGroup;
-
-    private String adminSms;
-
-    private String teacherSms;
-
-    private String verifyUpload;
-
-    private String stuBatchImport;
-
-    private String importStuMax;
-
-    private String forgotPassword;
+    private Date updatetime;
 
     private List<Role> roles;
 
     private static final long serialVersionUID = 1L;
 
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_admin"));
+        for (Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        }
+       // authorities.add(new SimpleGrantedAuthority("ROLE_dean"));
         return authorities;
     }
 
@@ -106,7 +78,7 @@ public class Managers extends UserBase implements UserDetails {
     @JsonIgnore
     @Override
     public String getUsername() {
-        return name;
+        return uername;
     }
 
 
@@ -130,4 +102,5 @@ public class Managers extends UserBase implements UserDetails {
     public boolean isCredentialsNonExpired() {
         return true;
     }
+
 }
