@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/components/Login'
 import Role from '@/components/Role'
+import Bart from '@/components/Bart'
 import Home from '@/components/Home'
 // import EmpAdv from '@/components/emp/EmpAdv'
 // import EmpBasic from '@/components/emp/EmpBasic'
@@ -49,6 +50,12 @@ export default new Router({
       meta: {
         requireAuth: true
       }
+    },
+    {
+      path: '/bart',
+      name: 'Bart',
+      component: Bart,
+      hidden: true
     }
   ]
 })

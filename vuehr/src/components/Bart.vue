@@ -4,7 +4,7 @@
        <!-- 信息栏 begin -->
       <el-row :gutter="10">
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="demo-ruleForm">
-        <el-col :span="4">
+        <el-col :offset="3" :span="4">
             <el-card class="box-card" style="height:38px;padding-top:0px" >
             受试者信息管理
           </el-card>
@@ -56,7 +56,7 @@
     <!-- 中间部分 -->
     <el-row>
       <!-- 奖励等级 -->
-      <el-col :span="6">
+      <el-col :offset="2" :span="6">
         <el-row>
           <el-col :span="12">特等奖励 - - -></el-col>
           <el-col :span="12" class="colHeight">
@@ -101,7 +101,7 @@
         
         </el-col>
       <!-- 信息 -->
-      <el-col :span="6">
+      <el-col :span="3">
         <el-row>
           <el-col :span="24">
            <el-row>
