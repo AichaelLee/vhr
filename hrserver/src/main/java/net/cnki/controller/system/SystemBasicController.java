@@ -8,7 +8,6 @@ import net.cnki.common.fw.annotation.SystemLog;
 import net.cnki.mapper.TblPlanMapper;
 import net.cnki.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
 import org.springframework.web.bind.annotation.*;
@@ -134,7 +133,7 @@ public class SystemBasicController {
      * @return
      */
     @GetMapping(value="/getPlans")
-    @Cacheable("getPlans")
+//    @Cacheable("getPlans")
     public RespBean getPlans(){
         TblPlanExample example = new TblPlanExample();
         example.createCriteria().andPlanIdIsNotNull();
