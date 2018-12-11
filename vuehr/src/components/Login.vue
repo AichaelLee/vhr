@@ -96,7 +96,8 @@
             <!-- <div id="div1" @click="clickBom"></div> -->
           
             <el-row>
-               <el-col :span="24"><img src="./balloon.png" class="ballimg" :style="{ height: balloonHeight+'px', width: balloonWidth + 'px' }" @click="clickBalloon"></el-col>
+               <el-col :span="24"> 
+                 <img src="./balloon.png" class="ballimg" :style="{ height: balloonHeight+'px', width: balloonWidth + 'px' }" @click="clickBalloon" ></el-col>
             </el-row>
             
           </el-col>
@@ -110,7 +111,7 @@
           <el-col :span="24">
            <el-row>
              <el-col :span="12">上一个气球收益</el-col>
-             <el-col :span="12" style="height:50px;color:red">￥&nbsp;{{lastTimeScore*0.02*100*1/100}}</el-col>
+             <el-col :span="12" style="height:50px;color:red">￥&nbsp;{{lastTimeScore*2*1/100}}</el-col>
            </el-row>
           </el-col>
         </el-row>
@@ -118,7 +119,7 @@
           <el-col :span="24">
             <el-row>
              <el-col :span="12">总收益</el-col>
-             <el-col :span="12" style="height:50px;color:red">￥&nbsp;{{sumScore*0.02*100*1/100}}</el-col>
+             <el-col :span="12" style="height:50px;color:red">￥&nbsp;{{sumScore*2*1/100}}</el-col>
            </el-row>
           </el-col>
         </el-row>
@@ -153,6 +154,19 @@
 </template>
 <script>
 export default {
+  created(){
+    var that=this;
+			document.onkeydown=function(e){
+        var key=window.event.keyCode;
+        console.log(key)
+				if(key==49){
+					that.clickBalloon();
+				}else if(key==53){
+          that.getReward();
+        }
+			}
+
+  },
    mounted(){
     this.over = this.RandomNum()
   },
@@ -286,10 +300,12 @@ export default {
     },
      // 获得奖励
     getReward(){
-      //操作建立在剩余测试数大于0的情况
-      if(this.leftTime>0){
+        if(this.infoDone){
+              //操作建立在剩余测试数大于0的情况
+            if(this.leftTime>0){
           // 增加总分数
-          this.sumScore += this.initialScore;
+          // this.sumScore += this.initialScore;
+          this.sumScore = this.add(this.initialScore,this.sumScore);
           // 把本次得分改为0
           this.initialScore = 0;
           // 测试次数减少1
@@ -303,9 +319,45 @@ export default {
           this.magrintop=200;
 
       }
+        }else{
+          this.$message.error('请您输入个人信息!');
+        }
+  
      
 
     },
+    // 解决小数相加损失精度的问题
+    add(arg1, arg2){
+        var r1, r2, m, c;
+  try {
+    r1 = arg1.toString().split(".")[1].length;
+  }
+  catch (e) {
+    r1 = 0;
+  }
+  try {
+    r2 = arg2.toString().split(".")[1].length;
+  }
+  catch (e) {
+    r2 = 0;
+  }
+  c = Math.abs(r1 - r2);
+  m = Math.pow(10, Math.max(r1, r2));
+  if (c > 0) {
+    var cm = Math.pow(10, c);
+    if (r1 > r2) {
+      arg1 = Number(arg1.toString().replace(".", ""));
+      arg2 = Number(arg2.toString().replace(".", "")) * cm;
+    } else {
+      arg1 = Number(arg1.toString().replace(".", "")) * cm;
+      arg2 = Number(arg2.toString().replace(".", ""));
+    }
+  } else {
+    arg1 = Number(arg1.toString().replace(".", ""));
+    arg2 = Number(arg2.toString().replace(".", ""));
+  }
+  return (arg1 + arg2) / m;
+},
     hadBoomed() {
         this.$message({
           showClose: true,
