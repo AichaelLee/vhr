@@ -33,7 +33,7 @@
         },
         checked: true,
         loginForm: {
-          username: 'admin',
+          username: 'teacher',
           password: '123',
           userType: '2'
         },

@@ -5,8 +5,9 @@
       <FilenameOption v-model="filename" />
       <AutoWidthOption v-model="autoWidth" />
       <BookTypeOption v-model="bookType" />
-      <el-button :loading="downloadLoading" style="margin:0 0 20px 20px;" type="primary" icon="document" @click="handleDownload">Excel</el-button>
+      <el-button :loading="downloadLoading" style="margin:0 0 20px 20px;" type="primary" icon="document" @click="handleDownload">下载 Excel</el-button>
       <a href="https://panjiachen.github.io/vue-element-admin-site/feature/component/excel.html" target="_blank" style="margin-left:15px;">
+        <el-tag type="info">Documentation</el-tag>
       </a>
     </div>
 
@@ -34,7 +35,7 @@
       <el-table-column align="center" label="Date" width="220">
         <template slot-scope="scope">
           <i class="el-icon-time"/>
-          <span>{{ scope.row.timestamp}}</span>
+          <span>{{ scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -42,7 +43,7 @@
 </template>
 
 <script>
-import { parseTime } from '@/utils/index'
+import { parseTime } from '@/utils'
 
 // options components
 import FilenameOption from './components/FilenameOption'
@@ -66,16 +67,13 @@ export default {
   created() {
     this.fetchData()
   },
-  filters: {
-  parseTimef: function (value) {
-    return parseTime(value)
-  }
-},
   methods: {
     fetchData() {
       this.listLoading = true
-      this.listLoading = false
-     
+      fetchList().then(response => {
+        this.list = response.data.items
+        this.listLoading = false
+      })
     },
     handleDownload() {
       this.downloadLoading = true
