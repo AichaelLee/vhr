@@ -57,6 +57,7 @@ export default {
     handleSuccess(response, file) {
       const uid = file.uid
       const objKeyArr = Object.keys(this.listObj)
+      debugger
       for (let i = 0, len = objKeyArr.length; i < len; i++) {
         if (this.listObj[objKeyArr[i]].uid === uid) {
           this.listObj[objKeyArr[i]].url = response.files.file

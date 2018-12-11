@@ -1,13 +1,9 @@
 <template>
-  <div class="components-container">
-    <code>
-      小技巧
-      <a target="_blank" class="link-type" href="https://panjiachen.github.io/vue-element-admin-site/component/rich-editor.html"> 组件文档</a>
-    </code>
+  <div class="components-container" style="margin-top:20px">
     <div>
-      <tinymce :height="300" v-model="content"/>
+      <tinymce :height="500" v-model="content"/>
     </div>
-    <div class="editor-content" v-html="content"/>
+    <div>{{content}}</div>
   </div>
 </template>
 
@@ -20,8 +16,8 @@ export default {
   data() {
     return {
       content:
-      `<h1 style="text-align: center;">Welcome to the TinyMCE demo!</h1><p style="text-align: center; font-size: 15px;"><img title="TinyMCE Logo" src="//www.tinymce.com/images/glyph-tinymce@2x.png" alt="TinyMCE Logo" width="110" height="97" /><ul>
-        <li>Our <a href="//www.tinymce.com/docs/">documentation</a> is a great resource for learning how to configure TinyMCE.</li><li>Have a specific question? Visit the <a href="https://community.tinymce.com/forum/">Community Forum</a>.</li><li>We also offer enterprise grade support as part of <a href="https://tinymce.com/pricing">TinyMCE premium subscriptions</a>.</li>
+      `<h1 style="text-align: center;">欢迎进入CNKI论文写作系统的VUE版本!</h1><p style="text-align: center; font-size: 15px;"><ul>
+        <li><a href="localhost:8080">我们的产品</a> 欢迎使用CNKI论文写作系统</li><li>使用vue重构，体验更流畅</a>.</li>
       </ul>`
     }
   }
@@ -29,8 +25,9 @@ export default {
 </script>
 
 <style scoped>
-.editor-content{
-  margin-top: 20px;
+.components-container {
+  margin: 30px 50px;
+  position: relative;
 }
 </style>
 
