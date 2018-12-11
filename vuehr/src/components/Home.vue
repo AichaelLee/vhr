@@ -6,22 +6,29 @@
         <div style="display: flex;align-items: center;margin-right: 7px">
           <el-badge style="margin-right: 30px" :is-dot="this.$store.state.nfDot">
             <i class="fa fa-bell-o" @click="alert()" style="cursor: pointer"></i>
+            
           </el-badge>
-           <el-button @click="swtichRoles"  icon="el-icon-d-caretr" size="small">切换</el-button>
+          
+            
+           <el-button @click="swtichRoles" class="switchRole"  icon="el-icon-d-caretr" size="small">切换</el-button>
            &nbsp;&nbsp;&nbsp;&nbsp;         
           <!-- <el-button type="button" ><i @click="swtichRoles" class="fa fa-spinner">切换</i></el-button> -->
-          <el-dropdown @command="handleCommand">
+          <!-- <el-dropdown @command="handleCommand"> -->
   <span class="el-dropdown-link home_userinfo" style="display: flex;align-items: center">
      角色: {{role_zh}} / 院系:计算机学院
-    <i><img v-if="user.userface!=''" :src="user.userface"
-            style="width: 40px;height: 40px;margin-right: 5px;margin-left: 5px;border-radius: 40px"/></i>
+    <!-- <i><img v-if="user.userface!=''" :src="user.userface"
+            style="width: 40px;height: 40px;margin-right: 5px;margin-left: 5px;border-radius: 40px"/></i> -->
+          
   </span>
-            <el-dropdown-menu slot="dropdown">
+  <el-badge style="margin-left: 15px;margin-right:15px;" :is-dot="this.$store.state.nfDot">
+            <i class="el-icon-question" style="cursor: pointer" @click.prevent.stop="guide"></i>
+          </el-badge>
+            <!-- <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>个人中心</el-dropdown-item>
               <el-dropdown-item>设置</el-dropdown-item>
               <el-dropdown-item command="logout" divided>注销</el-dropdown-item>
             </el-dropdown-menu>
-          </el-dropdown>
+          </el-dropdown> -->
         </div>
       </el-header>
       <el-container>
@@ -62,16 +69,24 @@
 <script>
 import {initMenu} from '../utils/utils'
 import router from '../router'
+import Driver from 'driver.js' // import driver.js
+import 'driver.js/dist/driver.min.css' // import driver.js css
+import steps from './account/defineSteps'
   export default{
     
     mounted: function () {
      this.role_zh = this.$store.state.user.roles[0].nameZh
+      this.driver = new Driver()
     // alert(this.$route.params.role)
      // alert(Object.entries(this.$route.params.role))
 //      this.devMsg();
     //  this.loadNF();
     },
     methods: {
+      guide() {
+      this.driver.defineSteps(steps)
+      this.driver.start()
+    },
       swtichRoles(){
           this.$router.push({
             path: '/role', 
@@ -114,7 +129,8 @@ import router from '../router'
     data(){
       return {
         isDot: false,
-        role_zh:''
+        role_zh:'',
+        driver: null
       }
     },
     computed: {
