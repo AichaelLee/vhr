@@ -4,7 +4,7 @@
        <!-- 信息栏 begin -->
       <el-row :gutter="10">
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="demo-ruleForm">
-        <el-col :offset="3" :span="4">
+        <el-col :offset="1" :span="4">
             <el-card class="box-card" style="height:38px;padding-top:0px" >
             受试者信息管理
           </el-card>
@@ -15,10 +15,10 @@
         </el-col>
         
       <el-col :offset="1" :span="4">
-        <el-form-item  prop="name">
+        <el-form-item  prop="id">
         <el-input
-          placeholder="姓名"
-          v-model="ruleForm.name"
+          placeholder="序号"
+          v-model.number="ruleForm.id"
           clearable>
         </el-input>
         </el-form-item>
@@ -54,8 +54,8 @@
     </el-row>
 
     <!-- 中间部分 -->
-    <el-row>
-      <!-- 奖励等级 -->
+    <!-- <el-row>
+      奖励等级
       <el-col :offset="2" :span="6">
         <el-row>
           <el-col :span="12">特等奖励 - - -></el-col>
@@ -85,36 +85,40 @@
                 </el-card>
              </el-col>
         </el-row>
-        
+         -->
 
 
-      </el-col>
+      <!-- </el-col> -->
       <!-- 气球 -->
       <el-col :span="12" class="balloonPosition">
         <el-row>
           <el-col class="imgPosi" :span="24" :style="{ 'margin-top':magrintop+'px'}">
             <!-- <div id="div1" @click="clickBom"></div> -->
-            <img src="./balloon.png" class="ballimg" :style="{ height: balloonHeight+'px', width: balloonWidth + 'px' }" @click="clickBalloon">
+          
+            <el-row>
+               <el-col :span="24"><img src="./balloon.png" class="ballimg" :style="{ height: balloonHeight+'px', width: balloonWidth + 'px' }" @click="clickBalloon"></el-col>
+            </el-row>
+            
           </el-col>
         </el-row>
            
         
         </el-col>
       <!-- 信息 -->
-      <el-col :span="3">
+      <el-col :span="4">
         <el-row>
           <el-col :span="24">
            <el-row>
-             <el-col :span="8"><div><img src="./score.jpg" class="scoreSize"></div></el-col>
-             <el-col :span="8" style="height:50px;padding-top:20px;color:red">{{initialScore}}</el-col>
+             <el-col :span="12">上一个气球收益</el-col>
+             <el-col :span="12" style="height:50px;color:red">￥&nbsp;{{lastTimeScore*0.02*100*1/100}}</el-col>
            </el-row>
           </el-col>
         </el-row>
             <el-row style="margin-top:15px">
           <el-col :span="24">
             <el-row>
-             <el-col :span="8"><div><img src="./score.jpg" class="scoreSize"></div></el-col>
-             <el-col :span="8" style="height:50px;padding-top:20px;color:red">{{sumScore}}</el-col>
+             <el-col :span="12">总收益</el-col>
+             <el-col :span="12" style="height:50px;color:red">￥&nbsp;{{sumScore*0.02*100*1/100}}</el-col>
            </el-row>
           </el-col>
         </el-row>
@@ -130,7 +134,7 @@
         </el-row>
         
       </el-col>
-    </el-row>
+  
    
     
     <!-- <el-row>
@@ -155,7 +159,7 @@ export default {
     data () {
     return {
       ruleForm:{
-        name:'',
+        id:'',
         gender:'',
         age:''
       },
@@ -163,6 +167,9 @@ export default {
       times: 0,
       initialScore :0,
       sumScore: 0,
+      lastTimeScore:0,
+      // 点击气球的总数
+      clickTimes:0,
       bumNum:0,
        options: [{
           value: '1',
@@ -178,12 +185,13 @@ export default {
         // 气球的高度和宽度
         balloonHeight:40,
         balloonWidth:40,
-        magrintop:350,
+        magrintop:200,
         infoDone:false,
         over:'',
         rules: {
-          name: [
-            { required: true, message: '请输入姓名', trigger: 'blur' },
+          id: [
+             { required: true, message: '序号不能为空'},
+            { type: 'number', message: '序号必须为数字值'}
           ],
           gender: [
             { required: true, message: '请选择性别', trigger: 'change' }
@@ -244,10 +252,11 @@ export default {
     clickBalloon(){
       if(this.infoDone){
          if(this.leftTime>0){
-         this.magrintop-=10;
-        this.balloonWidth+=10;
-        this.balloonHeight+=10;
+         this.magrintop-=2;
+        this.balloonWidth+=2;
+        this.balloonHeight+=2;
         this.initialScore+=1;
+        this.clickTimes+=1;
 
             if(this.initialScore<=this.over){
               // 未爆炸
@@ -256,8 +265,9 @@ export default {
               //恢复气球到初始大小
                this.balloonWidth=40;
                this.balloonHeight=40;
-               this.magrintop=350;
-
+               this.magrintop=200;
+               //显示上次收益：
+               //this.lastTimeScore = this.clickTimes
                // 重置本次得分
               this.initialScore = 0;
               this.hadBoomed();
@@ -284,10 +294,13 @@ export default {
           this.initialScore = 0;
           // 测试次数减少1
           this.leftTime -= 1;
+                //显示上次收益：
+               this.lastTimeScore = this.clickTimes
+               this.clickTimes = 0
           // 恢复原始大小
           this.balloonWidth=40;
           this.balloonHeight=40;
-          this.magrintop=350;
+          this.magrintop=200;
 
       }
      
@@ -304,7 +317,7 @@ export default {
       },
       RandomNum() {
             let Min = 0;
-            let Max = 30;
+            let Max = 128;
              var Range = Max - Min;
              var Rand = Math.random();
              if(Math.round(Rand * Range)==0){             
