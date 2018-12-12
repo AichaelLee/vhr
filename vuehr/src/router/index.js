@@ -4,6 +4,7 @@ import Login from '@/components/Login'
 import Role from '@/components/Role'
 import Bart from '@/components/Bart'
 import Home from '@/components/Home'
+import Excel from '@/components/thesis/ThGuidenceRecord'
 // import EmpAdv from '@/components/emp/EmpAdv'
 // import EmpBasic from '@/components/emp/EmpBasic'
 // import PerEc from '@/components/personnel/PerEc'
@@ -37,6 +38,13 @@ export default new Router({
       component: Login,
       hidden: true
     }, 
+    {
+      path: '/excel',
+      name: 'Excel',
+      component: Excel,
+      hidden: true
+    },
+
     {
       path: '/role',
       name: 'Role',

@@ -46,47 +46,13 @@
         </el-col>
         <el-col :span="3">
            <el-button type="primary" plain @click="saveInfo('ruleForm')" :disabled="infoDisabled">开始</el-button>
+           <el-button type="primart" @click="statis">统计</el-button>
         </el-col>
         </el-form>
     </el-row>
       <!-- 信息栏 end -->
       <br><br>
     </el-row>
-
-    <!-- 中间部分 -->
-    <!-- <el-row>
-      奖励等级
-      <el-col :offset="2" :span="6">
-        <el-row>
-          <el-col :span="12">特等奖励 - - -></el-col>
-          <el-col :span="12" class="colHeight">
-            <el-card class="box-card1">
-            </el-card>
-          </el-col>
-        </el-row>
-          <el-row>
-              <el-col :span="12">大奖励 - - -></el-col>
-              <el-col :span="12" class="colHeight">
-                 <el-card class="box-card2">
-                 </el-card>
-              </el-col>
-        </el-row>
-            <el-row>
-              <el-col :span="12">中奖励- - -></el-col>
-              <el-col :span="12" class="colHeight">
-            <el-card class="box-card3">
-            </el-card>
-          </el-col>
-        </el-row>
-                <el-row>
-                  <el-col :span="12">小奖励- - -></el-col>
-                <el-col :span="12" class="colHeight">
-                <el-card class="box-card4">
-                </el-card>
-             </el-col>
-        </el-row>
-         -->
-
 
       <!-- </el-col> -->
       <!-- 气球 -->
@@ -120,6 +86,14 @@
             <el-row>
              <el-col :span="12">总收益</el-col>
              <el-col :span="12" style="height:50px;color:red">￥&nbsp;{{sumScore*2*1/100}}</el-col>
+           </el-row>
+          </el-col>
+        </el-row>
+         <el-row style="margin-top:15px">
+          <el-col :span="24">
+            <el-row>
+             <el-col :span="12">未爆破气球总数</el-col>
+             <el-col :span="12" style="height:50px;color:red">&nbsp;{{unBoomed}}</el-col>
            </el-row>
           </el-col>
         </el-row>
@@ -164,7 +138,9 @@ export default {
 				}else if(key==53){
           that.getReward();
         }
-			}
+      }
+      // 创建web数据库
+      this.create_websql()
 
   },
    mounted(){
@@ -182,6 +158,8 @@ export default {
       initialScore :0,
       sumScore: 0,
       lastTimeScore:0,
+      // 结束后未爆破的次数
+      unBoomed:0,
       // 点击气球的总数
       clickTimes:0,
       bumNum:0,
@@ -235,6 +213,20 @@ export default {
       
     }
   },
+  watch:{
+    leftTime(newV,oldV){
+      if(newV===0){
+            // 最后一个气球已经获得奖励了,insert db
+            let _this = this
+            this.db.transaction(function (tx) {
+            tx.executeSql('INSERT INTO BART (id, gender, age, sumScore,unBoomedNum,timestamp) VALUES (?, ?,?, ?, ?,?)',[_this.ruleForm.id,_this.ruleForm.gender, _this.ruleForm.age, _this.sumScore*2*1/100,_this.unBoomed,new Date()]);
+            
+             });
+
+      }
+
+    }
+  },
  
   methods:{
     openNotice(){
@@ -248,6 +240,7 @@ export default {
           }
         });
     },
+    statis(){this.$router.push({ path:  '/excel' })},
     saveInfo(formName){
       this.$refs[formName].validate((valid) => {
           if (valid) {
@@ -266,12 +259,11 @@ export default {
     clickBalloon(){
       if(this.infoDone){
          if(this.leftTime>0){
-         this.magrintop-=2;
-        this.balloonWidth+=2;
-        this.balloonHeight+=2;
-        this.initialScore+=1;
-        this.clickTimes+=1;
-
+            this.magrintop-=2;
+            this.balloonWidth+=2;
+            this.balloonHeight+=2;
+            this.initialScore+=1;
+            this.clickTimes+=1;
             if(this.initialScore<=this.over){
               // 未爆炸
             }else{
@@ -284,6 +276,8 @@ export default {
                //this.lastTimeScore = this.clickTimes
                // 重置本次得分
               this.initialScore = 0;
+              this.lastTimeScore = 0;
+              this.clickTimes = 0
               this.hadBoomed();
               this.leftTime-=1;
               this.over = this.RandomNum()
@@ -303,6 +297,8 @@ export default {
         if(this.infoDone){
               //操作建立在剩余测试数大于0的情况
             if(this.leftTime>0){
+              // 未爆破数目
+              this.unBoomed += 1;
           // 增加总分数
           // this.sumScore += this.initialScore;
           this.sumScore = this.add(this.initialScore,this.sumScore);
@@ -310,9 +306,9 @@ export default {
           this.initialScore = 0;
           // 测试次数减少1
           this.leftTime -= 1;
-                //显示上次收益：
-               this.lastTimeScore = this.clickTimes
-               this.clickTimes = 0
+          //显示上次收益：
+          this.lastTimeScore = this.clickTimes
+          this.clickTimes = 0
           // 恢复原始大小
           this.balloonWidth=40;
           this.balloonHeight=40;
@@ -328,36 +324,44 @@ export default {
     },
     // 解决小数相加损失精度的问题
     add(arg1, arg2){
-        var r1, r2, m, c;
-  try {
-    r1 = arg1.toString().split(".")[1].length;
-  }
-  catch (e) {
-    r1 = 0;
-  }
-  try {
-    r2 = arg2.toString().split(".")[1].length;
-  }
-  catch (e) {
-    r2 = 0;
-  }
-  c = Math.abs(r1 - r2);
-  m = Math.pow(10, Math.max(r1, r2));
-  if (c > 0) {
-    var cm = Math.pow(10, c);
-    if (r1 > r2) {
-      arg1 = Number(arg1.toString().replace(".", ""));
-      arg2 = Number(arg2.toString().replace(".", "")) * cm;
-    } else {
-      arg1 = Number(arg1.toString().replace(".", "")) * cm;
-      arg2 = Number(arg2.toString().replace(".", ""));
-    }
-  } else {
-    arg1 = Number(arg1.toString().replace(".", ""));
-    arg2 = Number(arg2.toString().replace(".", ""));
-  }
-  return (arg1 + arg2) / m;
+          var r1, r2, m, c;
+          try {
+            r1 = arg1.toString().split(".")[1].length;
+          }
+          catch (e) {
+            r1 = 0;
+          }
+          try {
+            r2 = arg2.toString().split(".")[1].length;
+          }
+          catch (e) {
+            r2 = 0;
+          }
+          c = Math.abs(r1 - r2);
+          m = Math.pow(10, Math.max(r1, r2));
+          if (c > 0) {
+            var cm = Math.pow(10, c);
+            if (r1 > r2) {
+              arg1 = Number(arg1.toString().replace(".", ""));
+              arg2 = Number(arg2.toString().replace(".", "")) * cm;
+            } else {
+              arg1 = Number(arg1.toString().replace(".", "")) * cm;
+              arg2 = Number(arg2.toString().replace(".", ""));
+            }
+          } else {
+            arg1 = Number(arg1.toString().replace(".", ""));
+            arg2 = Number(arg2.toString().replace(".", ""));
+          }
+          return (arg1 + arg2) / m;
 },
+     create_websql() {
+        //创建名为mydb的数据库             版本    描述      大小
+          this.db = openDatabase('bartdb', '1.0', 'bartdb DB', 2 * 1024 * 1024);
+        //创建一个名为BART的表,如果存在则不会创建
+          this.db.transaction(function (tx) {
+            tx.executeSql('CREATE TABLE IF NOT EXISTS BART (id, gender, age, sumScore,unBoomedNum,timestamp)');          
+          });
+      },
     hadBoomed() {
         this.$message({
           showClose: true,
