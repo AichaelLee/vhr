@@ -4,17 +4,17 @@
        <!-- 信息栏 begin -->
       <el-row :gutter="10">
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="demo-ruleForm">
-        <el-col :offset="1" :span="4">
+        <el-col :offset="1" :xs="11" :sm="11" :md="4" :lg="4" :xl="4" style="margin-top:10px">
             <el-card class="box-card" style="height:38px;padding-top:0px" >
             受试者信息管理
           </el-card>
         </el-col>
-        <el-col :span="3">
+        <el-col :xs="12" :sm="12" :md="3" :lg="3" :xl="3" style="margin-top:10px">
            
            <el-button type="info"  @click="openNotice" plain round>信息按钮</el-button>
         </el-col>
         
-      <el-col :offset="1" :span="4">
+      <el-col :offset="1" :xs="8" :sm="8" :md="4" :lg="4" :xl="4" style="margin-top:10px">
         <el-form-item  prop="id">
         <el-input
           placeholder="序号"
@@ -23,7 +23,7 @@
         </el-input>
         </el-form-item>
         </el-col>
-        <el-col :span="2">
+        <el-col :xs="6" :sm="6" :md="2" :lg="2" :xl="2" style="margin-top:10px">
            <el-form-item  prop="gender">
             <el-select v-model="ruleForm.gender" clearable placeholder="性别">
             <el-option
@@ -35,7 +35,7 @@
           </el-select>
            </el-form-item>
         </el-col>
-        <el-col :span="2">
+        <el-col :xs="6" :sm="6" :md="2" :lg="2" :xl="2" style="margin-top:10px">
            <el-form-item  prop="age">
           <el-input
           placeholder="年龄"
@@ -44,10 +44,15 @@
         </el-input>
            </el-form-item>
         </el-col>
-        <el-col :span="3">
+        <el-col :xs="14" :sm="14" :md="3" :lg="3" :xl="3" style="margin-top:10px">
            <el-button type="primary" plain @click="saveInfo('ruleForm')" :disabled="infoDisabled">开始</el-button>
-           <el-button type="primart" @click="statis">统计</el-button>
+           
         </el-col>
+             <el-col :xs="6" :sm="6" :md="3" :lg="3" :xl="3" style="margin-top:10px">
+           <el-button type="primart" @click="statis">统计</el-button>
+           
+        </el-col>
+       
         </el-form>
     </el-row>
       <!-- 信息栏 end -->
@@ -56,13 +61,13 @@
 
       <!-- </el-col> -->
       <!-- 气球 -->
-      <el-col :span="12" class="balloonPosition">
+      <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" class="balloonPosition">
         <el-row>
-          <el-col class="imgPosi" :span="24" :style="{ 'margin-top':magrintop+'px'}">
+          <el-col class="imgPosi" :xs="24" :sm="24" :md="24" :lg="24" :xl="24" :style="{ 'margin-top':magrintop+'px'}">
             <!-- <div id="div1" @click="clickBom"></div> -->
           
             <el-row>
-               <el-col :span="24"> 
+               <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24"> 
                  <img src="./balloon.png" class="ballimg" :style="{ height: balloonHeight+'px', width: balloonWidth + 'px' }" @click="clickBalloon" ></el-col>
             </el-row>
             
@@ -72,41 +77,44 @@
         
         </el-col>
       <!-- 信息 -->
-      <el-col :span="4">
+      <el-col :xs="24" :sm="24" :md="4" :lg="4" :xl="4">
         <el-row>
-          <el-col :span="24">
+          <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
            <el-row>
-             <el-col :span="12">上一个气球收益</el-col>
-             <el-col :span="12" style="height:50px;color:red">￥&nbsp;{{lastTimeScore*2*1/100}}</el-col>
+             <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">上一个气球收益</el-col>
+             <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12" style="height:50px;color:red">￥&nbsp;{{lastTimeScore*2*1/100}}</el-col>
            </el-row>
           </el-col>
         </el-row>
             <el-row style="margin-top:15px">
-          <el-col :span="24">
+          <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
             <el-row>
-             <el-col :span="12">总收益</el-col>
-             <el-col :span="12" style="height:50px;color:red">￥&nbsp;{{sumScore*2*1/100}}</el-col>
+             <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">总收益&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</el-col>
+             <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12" style="height:50px;color:red">￥&nbsp;{{sumScore*2*1/100}}</el-col>
            </el-row>
           </el-col>
         </el-row>
-         <el-row style="margin-top:15px">
-          <el-col :span="24">
+         <!-- <el-row style="margin-top:15px">
+          <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
             <el-row>
-             <el-col :span="12">未爆破气球总数</el-col>
-             <el-col :span="12" style="height:50px;color:red">&nbsp;{{unBoomed}}</el-col>
+             <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">未爆破气球总数</el-col>
+             <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12" style="height:50px;color:red">&nbsp;{{doneUnboomend}}</el-col>
            </el-row>
           </el-col>
-        </el-row>
+        </el-row> -->
             <el-row>
-          <el-col :span="16" class="leftTime" style="margin-top:30px">
+          <el-col :xs="12" :sm="12" :md="16" :lg="16" :xl="16" class="leftTime" style="margin-top:30px">
             游戏还剩<span class="singleFont">{{leftTime}}</span>局
           </el-col>
-        </el-row>
-        <el-row style="margin-top:30px">
-          <el-col :span="16">
+          <el-col :xs="12" :sm="12" :md="24" :lg="24" :xl="24">
+            <el-row style="margin-top:20px">
+          <el-col :xs="12" :sm="12" :md="16" :lg="16" :xl="16">
             <el-button type="primary" @click="getReward" plain :disabled="ifDisabled">获得奖励</el-button>
           </el-col>
         </el-row>
+          </el-col>
+        </el-row>
+        
         
       </el-col>
   
@@ -159,6 +167,7 @@ export default {
       sumScore: 0,
       lastTimeScore:0,
       // 结束后未爆破的次数
+      doneUnboomend:'',
       unBoomed:0,
       // 点击气球的总数
       clickTimes:0,
@@ -173,7 +182,7 @@ export default {
         ],
         value4: '',
         age:'',
-        leftTime:30,
+        leftTime:5,
         // 气球的高度和宽度
         balloonHeight:40,
         balloonWidth:40,
@@ -216,6 +225,7 @@ export default {
   watch:{
     leftTime(newV,oldV){
       if(newV===0){
+        this.doneUnboomend = this.unBoomed
             // 最后一个气球已经获得奖励了,insert db
             let _this = this
             this.db.transaction(function (tx) {
