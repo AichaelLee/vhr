@@ -150,7 +150,6 @@ export default {
     var that=this;
 			document.onkeydown=function(e){
         var key=window.event.keyCode;
-        console.log(key)
 				if(key==49){
 					that.clickBalloon();
 				}else if(key==53){
@@ -237,11 +236,11 @@ export default {
       if(newV===0){
         this.doneUnboomend = this.unBoomed
             // 最后一个气球已经获得奖励了,insert db
-            let _this = this
-            this.db.transaction(function (tx) {
-            tx.executeSql('INSERT INTO BART (id, gender, age, sumScore,unBoomedNum,timestamp) VALUES (?, ?,?, ?, ?,?)',[_this.ruleForm.id,_this.ruleForm.gender, _this.ruleForm.age, _this.sumScore*2*1/100,_this.unBoomed,new Date()]);
+            // let _this = this
+            // this.db.transaction(function (tx) {
+            // tx.executeSql('INSERT INTO BART (id, gender, age, sumScore,unBoomedNum,timestamp) VALUES (?, ?,?, ?, ?,?)',[_this.ruleForm.id,_this.ruleForm.gender, _this.ruleForm.age, _this.sumScore*2*1/100,_this.unBoomed,new Date()]);
             
-             });
+            //  });
 
       }
 
@@ -261,7 +260,8 @@ export default {
         });
     },
     enterFormal(){
-      this.$router.push('/home')
+      // 输入的信息
+      this.$router.push({name:'home',params:{id:this.ruleForm.id,gender:this.ruleForm.gender,age:this.ruleForm.age}})
     },
     statis(){this.$router.push({ path:  '/excel' })},
     saveInfo(formName){
@@ -382,12 +382,12 @@ export default {
           return (arg1 + arg2) / m;
 },
      create_websql() {
-        //创建名为mydb的数据库             版本    描述      大小
-          this.db = openDatabase('bartdb', '1.0', 'bartdb DB', 2 * 1024 * 1024);
-        //创建一个名为BART的表,如果存在则不会创建
-          this.db.transaction(function (tx) {
-            tx.executeSql('CREATE TABLE IF NOT EXISTS BART (id, gender, age, sumScore,unBoomedNum,timestamp)');          
-          });
+        // //创建名为mydb的数据库             版本    描述      大小
+        //   this.db = openDatabase('bartdb', '1.0', 'bartdb DB', 2 * 1024 * 1024);
+        // //创建一个名为BART的表,如果存在则不会创建
+        //   this.db.transaction(function (tx) {
+        //     tx.executeSql('CREATE TABLE IF NOT EXISTS BART (id, gender, age, sumScore,unBoomedNum,timestamp)');          
+        //   });
       },
     hadBoomed() {
         this.$message({

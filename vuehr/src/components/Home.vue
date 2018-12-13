@@ -19,13 +19,14 @@
         <el-input
           placeholder="序号"
           v-model.number="ruleForm.id"
-          clearable>
+          clearable
+          :disabled="noDisabled">
         </el-input>
         </el-form-item>
         </el-col>
         <el-col :xs="6" :sm="6" :md="2" :lg="2" :xl="2" style="margin-top:10px">
            <el-form-item  prop="gender">
-            <el-select v-model="ruleForm.gender" clearable placeholder="性别">
+            <el-select v-model="ruleForm.gender" clearable placeholder="性别" :disabled="genderDisabled">
             <el-option
               v-for="item in options"
               :key="item.value"
@@ -40,12 +41,14 @@
           <el-input
           placeholder="年龄"
           v-model.number="ruleForm.age"
-          clearable>
+          clearable
+          :disabled="ageDisabled">
         </el-input>
            </el-form-item>
         </el-col>
         <el-col :xs="14" :sm="14" :md="3" :lg="3" :xl="3" style="margin-top:10px">
-           <el-button type="primary" plain @click="saveInfo('ruleForm')" :disabled="infoDisabled">开始</el-button>
+           <el-button v-if="!ifcanFix" type="primary" plain @click="saveInfo('ruleForm')" :disabled="ifcanFix">开始</el-button>
+           <el-button v-if="ifcanFix" type="primary" plain @click="modifiedInfo" :disabled="!ifcanFix">修改</el-button>
            
         </el-col>
              <el-col :xs="6" :sm="6" :md="3" :lg="3" :xl="3" style="margin-top:10px">
@@ -145,12 +148,18 @@
 <script>
 export default {
   created(){
-    
+    this.ruleForm.id=this.$route.params.id
+    this.ruleForm.gender=this.$route.params.gender
+    this.ruleForm.age = this.$route.params.age
+
+    this.infoDone = !!this.$route.params.id
+    this.noDisabled = !!this.$route.params.id
+    this.ageDisabled= !! this.$route.params.age
+    this.genderDisabled = !!this.$route.params.gender
    
     var that=this;
 			document.onkeydown=function(e){
         var key=window.event.keyCode;
-        console.log(key)
 				if(key==49){
 					that.clickBalloon();
 				}else if(key==53){
@@ -171,6 +180,10 @@ export default {
         gender:'',
         age:''
       },
+      infoDone:false,
+      noDisabled:false,
+      ageDisabled:false,
+      genderDisabled:false,
       name:'',
       times: 0,
       initialScore :0,
@@ -197,7 +210,6 @@ export default {
         balloonHeight:40,
         balloonWidth:40,
         magrintop:200,
-        infoDone:false,
         over:'',
         rules: {
           id: [
@@ -220,9 +232,7 @@ export default {
     ifDisabled(){
       return this.initialScore===0;
     },
-    infoDisabled(){
-      return this.infoDone
-    },
+
     balloonSize(){
       return{
         'height':`${this.balloonHeight}px`,
@@ -230,7 +240,11 @@ export default {
       }
 
       
-    }
+    },
+  
+    ifcanFix(){
+      return this.noDisabled
+      }
   },
   watch:{
     leftTime(newV,oldV){
@@ -260,11 +274,19 @@ export default {
           }
         });
     },
+    modifiedInfo(){
+      this.noDisabled = false;
+      this.ageDisabled= false;
+      this.genderDisabled=false
+    },
     statis(){this.$router.push({ path:  '/excel' })},
     saveInfo(formName){
       this.$refs[formName].validate((valid) => {
           if (valid) {
             this.infoDone = true;
+            this.noDisabled = true
+            this.ageDisabled= true
+            this.genderDisabled = true
             this.$message({
           message: '信息录入成功，请您开始测试',
           type: 'success'
