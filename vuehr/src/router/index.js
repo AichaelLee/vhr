@@ -34,7 +34,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'Login',
+      name: 'login',
       component: Login,
       hidden: true
     }, 
@@ -52,7 +52,7 @@ export default new Router({
       hidden: true
     }, {
       path: '/home',
-      name: '主页',
+      name: 'home',
       component: Home,
       hidden: true,
     },

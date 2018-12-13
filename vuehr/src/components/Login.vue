@@ -5,11 +5,15 @@
       <el-row :gutter="10">
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="demo-ruleForm">
   
-        <el-col :xs="12" :sm="12" :md="3" :lg="3" :xl="3" :offset="3" style="margin-top:10px">
+        <el-col :xs="12" :sm="12" :md="3" :lg="3" :xl="3" :offset="1" style="margin-top:10px">
            
            <el-button type="info"  @click="openNotice" plain round>指导语</el-button>
         </el-col>
-        
+         <el-col :xs="12" :sm="12" :md="4" :lg="4" :xl="4" style="margin-top:10px">
+            <el-card class="box-card" style="height:38px;padding-top:0px" >
+            受试者信息管理
+          </el-card>
+        </el-col>
       <el-col :offset="1" :xs="8" :sm="8" :md="4" :lg="4" :xl="4" style="margin-top:10px">
         <el-form-item  prop="id">
         <el-input
@@ -45,7 +49,7 @@
            
         </el-col>
              <el-col :xs="6" :sm="6" :md="3" :lg="3" :xl="3" style="margin-top:10px">
-           <el-button type="primart" @click="statis">统计</el-button>
+           <el-button type="primart" @click="enterFormal">进入正式实验</el-button>
            
         </el-col>
        
@@ -255,6 +259,9 @@ export default {
             });
           }
         });
+    },
+    enterFormal(){
+      this.$router.push('/home')
     },
     statis(){this.$router.push({ path:  '/excel' })},
     saveInfo(formName){
