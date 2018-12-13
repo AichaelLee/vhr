@@ -4,14 +4,10 @@
        <!-- 信息栏 begin -->
       <el-row :gutter="10">
         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="demo-ruleForm">
-        <el-col :offset="1" :xs="11" :sm="11" :md="4" :lg="4" :xl="4" style="margin-top:10px">
-            <el-card class="box-card" style="height:38px;padding-top:0px" >
-            受试者信息管理
-          </el-card>
-        </el-col>
-        <el-col :xs="12" :sm="12" :md="3" :lg="3" :xl="3" style="margin-top:10px">
+  
+        <el-col :xs="12" :sm="12" :md="3" :lg="3" :xl="3" :offset="3" style="margin-top:10px">
            
-           <el-button type="info"  @click="openNotice" plain round>信息按钮</el-button>
+           <el-button type="info"  @click="openNotice" plain round>指导语</el-button>
         </el-col>
         
       <el-col :offset="1" :xs="8" :sm="8" :md="4" :lg="4" :xl="4" style="margin-top:10px">
@@ -67,8 +63,16 @@
             <!-- <div id="div1" @click="clickBom"></div> -->
           
             <el-row>
-               <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24"> 
+               <el-col :xs="22" :sm="22" :md="22" :lg="22" :xl="22" :offset="2"> 
                  <img src="./balloon.png" class="ballimg" :style="{ height: balloonHeight+'px', width: balloonWidth + 'px' }" @click="clickBalloon" ></el-col>
+                    <audio controls id="MyAudio2" hidden>
+                          <source src="./explode.mp3" type="audio/mpeg"> 
+                          您的浏览器不支持该音频格式。
+                      </audio>
+                       <audio controls id="getRewordMusic" hidden>
+                          <source src="./collect.mp3" type="audio/mpeg"> 
+                          您的浏览器不支持该音频格式。
+                      </audio>
             </el-row>
             
           </el-col>
@@ -77,20 +81,20 @@
         
         </el-col>
       <!-- 信息 -->
-      <el-col :xs="24" :sm="24" :md="4" :lg="4" :xl="4">
+      <el-col :xs="22" :sm="22" :md="4" :lg="4" :xl="4" :offset="2" style="margin-top:20px">
         <el-row>
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
            <el-row>
-             <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">上一个气球收益</el-col>
-             <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12" style="height:50px;color:red">￥&nbsp;{{lastTimeScore*2*1/100}}</el-col>
+             <el-col :xs="12" :sm="12" :md="14" :lg="14" :xl="14">上一个气球收益</el-col>
+             <el-col :xs="12" :sm="12" :md="10" :lg="10" :xl="10" style="height:50px;color:red">￥&nbsp;{{lastTimeScore*2*1/100}}</el-col>
            </el-row>
           </el-col>
         </el-row>
             <el-row style="margin-top:15px">
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
             <el-row>
-             <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">总收益&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</el-col>
-             <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12" style="height:50px;color:red">￥&nbsp;{{sumScore*2*1/100}}</el-col>
+             <el-col :xs="12" :sm="12" :md="14" :lg="14" :xl="14">总收益&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</el-col>
+             <el-col :xs="12" :sm="12" :md="10" :lg="10" :xl="10" style="height:50px;color:red">￥&nbsp;{{sumScore*2*1/100}}</el-col>
            </el-row>
           </el-col>
         </el-row>
@@ -137,6 +141,8 @@
 <script>
 export default {
   created(){
+    
+   
     var that=this;
 			document.onkeydown=function(e){
         var key=window.event.keyCode;
@@ -277,6 +283,9 @@ export default {
             if(this.initialScore<=this.over){
               // 未爆炸
             }else{
+              document.getElementById('MyAudio2').play()
+             
+              
               // 已经爆炸了
               //恢复气球到初始大小
                this.balloonWidth=40;
@@ -323,6 +332,7 @@ export default {
           this.balloonWidth=40;
           this.balloonHeight=40;
           this.magrintop=200;
+           document.getElementById('getRewordMusic').play()
 
       }
         }else{
