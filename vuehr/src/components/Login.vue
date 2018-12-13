@@ -418,7 +418,7 @@ export default {
   margin: auto
 }
 .el-card__body{
-  padding:7px;
+  padding:7px !important;
 }
 .scoreSize{
   height: 50px;
