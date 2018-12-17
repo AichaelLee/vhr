@@ -23,8 +23,8 @@
     </properties>
 
     <modules>
-        <module>cnki-common</module>
         <module>cnki-security</module>
+        <module>cnki-common</module>
         <module>cnki-api</module>
         <module>cnki-web-rest</module>
         <module></module>
