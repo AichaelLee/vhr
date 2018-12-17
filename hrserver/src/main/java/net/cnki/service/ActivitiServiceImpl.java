@@ -80,23 +80,8 @@ public class ActivitiServiceImpl implements ActivitiService {
      */
     public void deploy(String bpmnName) {
 
-        String bpmn = "processes/" + bpmnName + ".xml";
-        String png = "processes/" + bpmnName + ".png";
 
 
-        log.info(String.format("xml:%s,png", bpmn, png));
-        Deployment deployment = repositoryService.createDeployment()//创建一个部署对象
-                .name(bpmnName)//添加部署的名称
-                .addInputStream(bpmn, this.getClass().getClassLoader().getResourceAsStream(bpmn))
-//                .addInputStream(png, this.getClass().getClassLoader().getResourceAsStream(png))
-                .deploy();//完成部署
-        //验证部署是否成功
-        ProcessDefinitionQuery processDefinitionQuery = repositoryService.createProcessDefinitionQuery();
-        long count = processDefinitionQuery.processDefinitionKey("mymodel1").count();
-
-        System.out.println("countosdfksjf"+count);
-        System.out.println("-------------"+deployment.getId());
-        System.out.println("============="+deployment.getName());
     }
 
 
