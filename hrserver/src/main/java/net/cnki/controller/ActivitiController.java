@@ -1,5 +1,9 @@
 package net.cnki.controller;
 
+import com.activiti.api.ActivitiTaskActionService;
+import com.activiti.api.domain.ResultListDataRepresentation;
+import com.activiti.api.runtime.AbstractProcessInstanceQueryResource;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import net.cnki.bean.Managers;
 import net.cnki.bean.TblStudentBase;
@@ -11,7 +15,6 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.form.FormProperty;
 import org.activiti.engine.form.TaskFormData;
-import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
@@ -20,9 +23,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +37,10 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/system/basic")
-public class ActivitiController {
+public class ActivitiController extends AbstractProcessInstanceQueryResource {
+
+    @Autowired
+    ActivitiTaskActionService activitiTaskActionService;
 
     @Autowired
     RepositoryService repositoryService;
@@ -50,41 +54,6 @@ public class ActivitiController {
     @Autowired
     FormService formService;
 
-
-    @GetMapping("getInstance")
-    public void getInstance(){
-
-
-        // -----------------------getProcessDefinition
-
-//        DeploymentBuilder deploymentBuilder = repositoryService.createDeployment();
-//        deploymentBuilder.addClasspathResource("thesis.bpmn20.xml");
-//        deploymentBuilder.name("论文管理模块fromJava");
-//        deploymentBuilder.category("fenlei");
-//        deploymentBuilder.key("form java");
-//        Deployment deploy = deploymentBuilder.deploy();
-//
-//        String deploymentId = deploy.getId();
-//        System.out.println("dsfasdf====="+deploymentId);
-        ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
-                .deploymentId("120001")
-                .singleResult();
-        log.info("流程定义文件 [{}],流程ID [{}]",processDefinition.getName(),processDefinition.getId());
-       // ----------------------------end
-        //启动运行流程
-     //   ProcessInstance processInstance = getProcessInstance(processDefinition);
-
-        // 得到任务
-        List<Task> tasks = taskService.createTaskQuery().list();
-        System.out.println("=====the task is:"+tasks.size());
-     //   List<ProcessInstance> lists = runtimeService.createProcessInstanceQuery().processInstanceId(processInstance.getId()).list();
-
-
-        queryTask();
-
-
-
-    }
 
     @GetMapping("startProcess")
     public void startProcess(){
@@ -104,6 +73,17 @@ public class ActivitiController {
         List<Task> tasks = taskService.createTaskQuery().taskAssignee(assignee).list();
 
         //
+    }
+
+    /**
+     * 查找所有instance的当前状况,前端的体现就是每发起一个process,查看当前的进度等
+     * @param requestNode
+     * @return
+     */
+    @Override
+    @RequestMapping(value = "query/process-instances", method = RequestMethod.POST, produces = "application/json")
+    public ResultListDataRepresentation getProcessInstances(@RequestBody ObjectNode requestNode) {
+        return super.getProcessInstances(requestNode);
     }
 
     @GetMapping("claim")

@@ -1,5 +1,6 @@
 package net.cnki.service;
 
+import com.activiti.api.domain.UserCache;
 import lombok.extern.slf4j.Slf4j;
 import net.cnki.common.UserTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public class SecurityUserDetailService implements UserDetailsService{
 
     @Autowired
     TeacherUserDetailService teacherUserDetailService;
+
+    @Autowired
+    private UserCache userCache;
 
 
 
