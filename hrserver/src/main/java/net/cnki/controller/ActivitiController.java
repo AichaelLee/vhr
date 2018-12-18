@@ -1,22 +1,28 @@
 package net.cnki.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import net.cnki.bean.Managers;
+import net.cnki.bean.TblStudentBase;
+import net.cnki.bean.TblTeacherBase;
+import net.cnki.bean.activiti.presetation.ProcessInstanceRepresentation;
 import net.cnki.bean.activiti.vo.TaskVo;
-import org.activiti.engine.FormService;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
+import org.activiti.engine.*;
 import org.activiti.engine.form.FormProperty;
 import org.activiti.engine.form.TaskFormData;
-import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.HistoricProcessInstanceQuery;
+import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -45,49 +51,118 @@ public class ActivitiController {
     @Autowired
     FormService formService;
 
+    @Autowired
+    HistoryService historyService;
 
-    @GetMapping("getInstance")
-    public void getInstance(){
+    @GetMapping("startProcess")
+    public void startProcess(){
 
-
-        // -----------------------getProcessDefinition
-
-//        DeploymentBuilder deploymentBuilder = repositoryService.createDeployment();
-//        deploymentBuilder.addClasspathResource("thesis.bpmn20.xml");
-//        deploymentBuilder.name("论文管理模块fromJava");
-//        deploymentBuilder.category("fenlei");
-//        deploymentBuilder.key("form java");
-//        Deployment deploy = deploymentBuilder.deploy();
-//
-//        String deploymentId = deploy.getId();
-//        System.out.println("dsfasdf====="+deploymentId);
-        ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
-                .deploymentId("120001")
-                .singleResult();
-        log.info("流程定义文件 [{}],流程ID [{}]",processDefinition.getName(),processDefinition.getId());
-       // ----------------------------end
-        //启动运行流程
-        ProcessInstance processInstance = getProcessInstance(processDefinition);
-
-        // 得到任务
-        List<Task> tasks = taskService.createTaskQuery().list();
-        System.out.println("=====the task is:"+tasks.size());
-        List<ProcessInstance> lists = runtimeService.createProcessInstanceQuery().processInstanceId(processInstance.getId()).list();
-
-
-        queryTask();
-
-
+        getProcessInstance();
 
     }
-    private  ProcessInstance getProcessInstance(ProcessDefinition processDefinition) {
 
-       // ProcessInstance processInstance = runtimeService.startProcessInstanceById(processDefinition.getId());
+    @RequestMapping(value = "query/process-instances", method = RequestMethod.POST)
+    public void getProcessInstances(String deploymentKey) {
+        HistoricProcessInstanceQuery instanceQuery = historyService.createHistoricProcessInstanceQuery();
+//        JsonNode deploymentKeyNode = requestNode.get("deploymentKey");
+        List<Deployment> deployments = repositoryService.createDeploymentQuery().deploymentKey(deploymentKey).list();
+
+        List<String> deploymentIds = new ArrayList<String>();
+        for (Deployment deployment : deployments) {
+            deploymentIds.add(deployment.getId());
+        }
+
+        instanceQuery.deploymentIdIn(deploymentIds);
+        instanceQuery.unfinished();
+        List<HistoricProcessInstance> instances = instanceQuery.list();
+        List<ProcessInstanceRepresentation> results = new ArrayList<>();
+        instances.forEach(o->{
+            ProcessInstanceRepresentation p = new ProcessInstanceRepresentation(o);
+            results.add(p);
+        });
+       // return super.getProcessInstances(requestNode);
+    }
+
+
+    @GetMapping("claim")
+    public void claimTask(Map<String,Object> variables){
+
+        // 得到所有任务
+        List<Task> tasks = taskService.createTaskQuery().list();
+
+        // 如果账号类型为 [学生] TODO 目前的userType是不对应的 后期要替换为下面的student等
+//        if(UserUtils.getCurrentUser().getId().equals(UserTypeEnum.STUDENT.getUserType())){
+//
+//        }
+
+        String userRole = new String();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(principal instanceof Managers){
+            userRole = "admin";
+
+        }else if(principal instanceof TblTeacherBase){
+            System.out.println("该用户的权限为:"+((TblTeacherBase) principal).getAuthorities());
+
+            if(((TblTeacherBase) principal).getAuthorities().equals("ROLE_dean")){
+                userRole ="dean";
+            }else{
+                //
+                userRole = "teacher";
+            }
+
+        }else if(principal instanceof TblStudentBase){
+            userRole = "student";
+
+        }
+
+        // TODO 临时测试使用
+        variables.put("论文题目","springboot整合工作流测试");
+        variables.put("提交日期","我周末提交的啦");
+
+        log.info("当前用户所拥有的角色为:",userRole.toString());
+
+        for (Task o : tasks) {
+            System.out.println("all task is:" + o.toString());
+            // 得到认证关系
+            List<IdentityLink> identitiesList = taskService.getIdentityLinksForTask(o.getId());
+
+            for (IdentityLink p : identitiesList) {
+
+                if (p.getType().equals("candidate") && p.getUserId().equals(userRole)) {
+                    log.info("我是{},我提交自己的论文成功啦!", userRole);
+                    taskService.claim(o.getId(), userRole);
+                    taskService.complete(o.getId(), variables);
+                    log.info("我是{}完成自己的任务啦!", userRole);
+
+
+                    log.info("任务是否完成状态:", isFinishProcess(o.getProcessInstanceId())==true?'是':'否');
+
+                }
+
+            }
+
+        }
+    }
+
+    public boolean isFinishProcess(String processInstanceId) {
+
+        /**判断流程是否结束，查询正在执行的执行对象表*/
+        ProcessInstance rpi = runtimeService
+                .createProcessInstanceQuery()//创建流程实例查询对象
+                .processInstanceId(processInstanceId)
+                .singleResult();
+
+        System.out.println("任务完成状态"+rpi);
+        return rpi == null;
+    }
+
+    private  ProcessInstance getProcessInstance() {
+
 
         Map<String,Object> variables = new HashMap<>();
-        variables.put("tile","fromjava");
+        variables.put("tile","from springbooy");
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("thesis",variables);
-        log.info("=2==2=2=2=启动流程 [{}]", processInstance.getProcessDefinitionKey());
+        log.info("启动流程 [{}]", processInstance.getProcessDefinitionKey());
         //启动流程second_approve
         return processInstance;
     }

@@ -6,6 +6,7 @@ import net.cnki.common.UserUtils;
 import net.cnki.common.fw.LogType;
 import net.cnki.common.fw.annotation.SystemLog;
 import net.cnki.mapper.TblPlanMapper;
+import net.cnki.mapper.TeacherVariableMapper;
 import net.cnki.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -43,6 +44,9 @@ public class SystemBasicController {
     @Autowired
     RestAuthentication restAuthentication;
 
+    @Autowired
+    TeacherVariableMapper teacherVariableMapper;
+
 
     @Autowired
     private SimpleAuthorityMapper simpleAuthorityMapper;
@@ -56,6 +60,11 @@ public class SystemBasicController {
     @RequestMapping("/roles")
     public List<Role> allRoles() {
         return roleService.roles();
+    }
+
+    @GetMapping("/tableData")
+    public List<TeacherVariable> getTableData(){
+        return teacherVariableMapper.tableTree();
     }
 
     @GetMapping("/userRoles")
