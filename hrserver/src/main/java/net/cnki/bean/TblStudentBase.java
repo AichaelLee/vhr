@@ -16,6 +16,8 @@ public class TblStudentBase extends UserBase implements UserDetails {
 
     private static final long serialVersionUID = 1L;
 
+    private Long id=8L;
+
     private Integer sid;
 
     private String username;
@@ -54,7 +56,6 @@ public class TblStudentBase extends UserBase implements UserDetails {
         }
         return authorities;
     }
-
 
     @JsonIgnore
     @Override

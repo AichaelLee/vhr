@@ -2,7 +2,7 @@
   <div style="margin-top: 10px">
     <el-tabs v-model="defaultTab" type="card">
       <el-tab-pane label="教师管理" name="jobTitleMana">
-        <pos-mana state="jobtitle"></pos-mana>
+        <!-- <pos-mana state="jobtitle"></pos-mana> -->
       </el-tab-pane>
       <el-tab-pane label="权限组" name="menuRole">
         <menu-role></menu-role>

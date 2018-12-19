@@ -4,7 +4,6 @@ import org.activiti.spring.boot.SecurityAutoConfiguration;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 // 2.0的start中默认也有一个spring-boot-autoconfigure-2.0..RELEASE.jar，
@@ -12,7 +11,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 // 需要将两个包中的 SecurityAutoConfiguration.class 都排除，
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 @MapperScan("net.cnki.mapper")
-@EnableCaching
+//@EnableCaching
 @EnableRedisHttpSession
 public class GMServerApplication {
 

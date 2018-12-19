@@ -61,8 +61,9 @@
                _this.$router
               .replace({path: '/Role'});
             }else {
+            
                _this.$router
-              .replace({path: '/home'});
+              .push({path: '/home'});
             }
            
           }

@@ -4,7 +4,6 @@ import net.cnki.bean.Role;
 import net.cnki.bean.TblTeacherBase;
 import net.cnki.mapper.TeachersMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +17,7 @@ public class TeacherService {
     @Autowired
     TeachersMapper teachersMapper;
 
-    @Cacheable("teacher_info")
+//    @Cacheable("teacher_info")
     public TblTeacherBase loadTeachertByName(String username){
         return teachersMapper.loadUserByUsername(username);
     }

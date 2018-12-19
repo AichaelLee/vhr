@@ -70,6 +70,8 @@ public class SystemBasicController {
     @GetMapping("/userRoles")
     @SystemLog(type = LogType.AUDITING,description = "得到用户拥有的所有角色")
     public List<Role> getRolesById(){
+
+        System.out.println("1!!!用户所有的角色为"+ roleService.getRolesByUserId(UserUtils.getCurrentUser().getId()));
         return roleService.getRolesByUserId(UserUtils.getCurrentUser().getId());
     }
 

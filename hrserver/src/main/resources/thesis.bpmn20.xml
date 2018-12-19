@@ -13,7 +13,7 @@
       </extensionElements>
     </userTask>
     <sequenceFlow id="sid-52B9AC84-9408-4D55-A71D-AE0C34D535E2" sourceRef="startEvent1" targetRef="sid-C9F20DA5-A62D-4E17-9547-A1FC3A1244FC"></sequenceFlow>
-    <userTask id="sid-4A22E7C7-CC65-46C5-8F67-AD57D2181267" name="指导教师意见" activiti:candidateUsers="teacher">
+    <userTask id="sid-4A22E7C7-CC65-46C5-8F67-AD57D2181267" name="指导教师意见" activiti:candidateUsers="teacher" activiti:formKey="teacherForma">
       <extensionElements>
         <modeler:user-info-email-teacher xmlns:modeler="http://activiti.com/modeler"><![CDATA[teacher@sina.com]]></modeler:user-info-email-teacher>
         <modeler:user-info-firstname-teacher xmlns:modeler="http://activiti.com/modeler"><![CDATA[tea]]></modeler:user-info-firstname-teacher>

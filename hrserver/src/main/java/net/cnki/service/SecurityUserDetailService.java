@@ -42,6 +42,8 @@ public class SecurityUserDetailService implements UserDetailsService{
         String username = usernameAndUserType[0];
         String userType = usernameAndUserType[1];
 
+        System.out.println("========登录用户类型为=========="+UserTypeEnum.getUserTypeZh(userType)+"asdfasdfsadfmingziwei:"+username);
+
         log.info("登录用户类型为:{},用户名为:{}",UserTypeEnum.getUserTypeZh(userType),username);
 
         // 如果账号类型为 [学生]

@@ -1,13 +1,13 @@
 package net.cnki.controller;
 
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import net.cnki.bean.Managers;
-import net.cnki.bean.TblStudentBase;
 import net.cnki.bean.TblTeacherBase;
 import net.cnki.bean.activiti.presetation.ProcessInstanceRepresentation;
 import net.cnki.bean.activiti.vo.TaskVo;
 import org.activiti.engine.*;
-import org.activiti.engine.form.FormProperty;
+import org.activiti.engine.form.StartFormData;
 import org.activiti.engine.form.TaskFormData;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricProcessInstanceQuery;
@@ -15,20 +15,15 @@ import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
-import org.activiti.engine.task.TaskQuery;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author: lizhizhong
@@ -50,6 +45,7 @@ public class ActivitiController {
 
     @Autowired
     FormService formService;
+
 
     @Autowired
     HistoryService historyService;
@@ -84,42 +80,38 @@ public class ActivitiController {
     }
 
 
-    @GetMapping("claim")
-    public void claimTask(Map<String,Object> variables){
+    @PostMapping("claim")
+    public Map claimTask(@RequestParam Map<String,Object> variables){
+
+        Map<String,Object> theTable = Maps.newHashMap();
+
+        System.out.println("=========claim variables is"+variables );
+
+
+        StringBuilder userRole = new StringBuilder();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(principal instanceof Managers){
+            userRole.append("admin");
+
+        }else if(principal instanceof TblTeacherBase){
+
+            if(((TblTeacherBase) principal).getRoles().get(0).getName().equals("ROLE_dean")){
+                userRole.append("dean");
+            }else if(((TblTeacherBase) principal).getRoles().get(0).getName().equals("ROLE_guideTeacher")){
+                userRole.append("teacher");
+            }else{
+                userRole.append("student");
+            }
+
+        }else {
+            userRole.append("student");
+
+        }
 
         // 得到所有任务
         List<Task> tasks = taskService.createTaskQuery().list();
 
-        // 如果账号类型为 [学生] TODO 目前的userType是不对应的 后期要替换为下面的student等
-//        if(UserUtils.getCurrentUser().getId().equals(UserTypeEnum.STUDENT.getUserType())){
-//
-//        }
 
-        String userRole = new String();
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(principal instanceof Managers){
-            userRole = "admin";
-
-        }else if(principal instanceof TblTeacherBase){
-            System.out.println("该用户的权限为:"+((TblTeacherBase) principal).getAuthorities());
-
-            if(((TblTeacherBase) principal).getAuthorities().equals("ROLE_dean")){
-                userRole ="dean";
-            }else{
-                //
-                userRole = "teacher";
-            }
-
-        }else if(principal instanceof TblStudentBase){
-            userRole = "student";
-
-        }
-
-        // TODO 临时测试使用
-        variables.put("论文题目","springboot整合工作流测试");
-        variables.put("提交日期","我周末提交的啦");
-
-        log.info("当前用户所拥有的角色为:",userRole.toString());
 
         for (Task o : tasks) {
             System.out.println("all task is:" + o.toString());
@@ -128,22 +120,71 @@ public class ActivitiController {
 
             for (IdentityLink p : identitiesList) {
 
-                if (p.getType().equals("candidate") && p.getUserId().equals(userRole)) {
-                    log.info("我是{},我提交自己的论文成功啦!", userRole);
-                    taskService.claim(o.getId(), userRole);
-                    taskService.complete(o.getId(), variables);
-                    log.info("我是{}完成自己的任务啦!", userRole);
+                if (p.getType().equals("candidate") && p.getUserId().equals(userRole.toString())) {
 
 
-                    log.info("任务是否完成状态:", isFinishProcess(o.getProcessInstanceId())==true?'是':'否');
+
+                    theTable = taskService.getVariables(o.getId());
+                    TaskFormData tf = formService.getTaskFormData(o.getId());
+
+                    taskService.claim(o.getId(),userRole.toString());
+                    taskService.complete(o.getId(),variables);
+
+
+                   // FormData fd = formService.getStartFormData();
+                  //  System.out.println("=========formdata is:"+fd.getFormProperties());
+                   // TaskFormData formData = formService.getTaskFormData(o.getId());
+
+
+                    log.info("我是{}完成自己的任务啦!", userRole.toString());
 
                 }
 
             }
 
         }
+        return theTable;
     }
 
+    @GetMapping("taskInfo")
+    public List<TaskVo>  getTaskInfo(){
+
+        // 判断当前访问者的权限
+        StringBuilder taskName = new StringBuilder();
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+       if(principal instanceof TblTeacherBase){
+
+            if(((TblTeacherBase) principal).getRoles().get(0).getName().equals("ROLE_dean")){
+                taskName.append("院长意见");
+            }else if(((TblTeacherBase) principal).getRoles().get(0).getName().equals("ROLE_guideTeacher")){
+                taskName.append("指导教师意见");
+            }
+
+        }
+        // 得到所有任务
+        List<Task> tasks = taskService.createTaskQuery().list();
+        List<Task> result = tasks.stream().filter(o->
+            o.getName().equals(taskName.toString())
+        ).collect(Collectors.toList());
+
+        // the result is
+        result.forEach(o-> System.out.println(o.toString()));
+
+        List<TaskVo> list1 = listToBeanVo(result, TaskVo.class, "variables");
+
+        for (TaskVo task : list1) {
+
+            Map<String, Object> variables = taskService.getVariables(task.getId());
+            System.out.println("=========variables is "+variables);
+
+            task.setVariables(variables);
+
+            log.info("ID:" + task.getId()+"variables"+variables + ",任务名称:" + task.getName() + ",接收人:" + task.getAssignee() + ",开始时间:" + task.getCreateTime());
+        }
+        return list1;
+
+
+    }
     public boolean isFinishProcess(String processInstanceId) {
 
         /**判断流程是否结束，查询正在执行的执行对象表*/
@@ -158,41 +199,15 @@ public class ActivitiController {
 
     private  ProcessInstance getProcessInstance() {
 
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("thesis");
 
-        Map<String,Object> variables = new HashMap<>();
-        variables.put("tile","from springbooy");
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("thesis",variables);
+        StartFormData st = formService.getStartFormData(processInstance.getProcessDefinitionId());
+        System.out.println("format data  is :="+st.getFormProperties()+"asdfasdf"+st.getFormKey());
         log.info("启动流程 [{}]", processInstance.getProcessDefinitionKey());
         //启动流程second_approve
         return processInstance;
     }
-    public List queryTask(){
 
-        // 获取任务服务对象
-        // 根据指派人获取用户任务
-        TaskQuery taskQuery = taskService.createTaskQuery();
-
-        List<Task> tasks = taskQuery.list();
-        List<TaskVo> list1 = null;
-        if(CollectionUtils.isNotEmpty(tasks)){
-            list1 = listToBeanVo(tasks, TaskVo.class, "variables");
-
-            for (TaskVo task : list1) {
-
-                Map<String, Object> variables = taskService.getVariables(task.getId());
-                task.setVariables(variables);
-                taskService.complete(task.getId());
-
-                TaskFormData formData = formService.getTaskFormData(task.getId());
-                List<FormProperty> properties = formData.getFormProperties();
-
-
-                log.info("ID:" + task.getId() + ",任务名称:" + task.getName() + ",接收人:" + task.getAssignee() + ",开始时间:" + task.getCreateTime());
-            }
-        }
-
-        return null;
-    }
 
     /***
      * 转化显示Bean

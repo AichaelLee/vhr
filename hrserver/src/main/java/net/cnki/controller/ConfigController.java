@@ -34,6 +34,7 @@ public class ConfigController {
      */
     @RequestMapping("/sysmenu")
     public List<Menu> sysmenu() {
+        System.out.println("====当前用户所拥有的菜单为:!!!1"+menuService.getMenusByUserId());
         return menuService.getMenusByUserId();
     }
 

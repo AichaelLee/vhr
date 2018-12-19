@@ -46,9 +46,9 @@ export default new Router({
       name: '主页',
       component: Home,
       hidden: true,
-      meta: {
-        requireAuth: true
-      }
+      // meta: {
+      //   requireAuth: false
+      // }
     }
   ]
 })
