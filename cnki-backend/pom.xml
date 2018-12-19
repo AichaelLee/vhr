@@ -17,8 +17,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<modules>
-		<module>cnki-web</module>
+		<module>cnki-common</module>
 		<module>cnki-activiti</module>
+		<module>cnki-web</module>
 	</modules>
 
 	<properties>
