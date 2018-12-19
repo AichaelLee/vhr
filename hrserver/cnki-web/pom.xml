@@ -3,15 +3,15 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.4.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<groupId>net.cnki</groupId>
+		<artifactId>cnki-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+
 	</parent>
 	<groupId>net.cnki</groupId>
 	<artifactId>cnki-web</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>demo</name>
+	<name>cnki-web</name>
 	<description>web for Spring Boot</description>
 
 	<properties>
@@ -19,6 +19,13 @@
 	</properties>
 
 	<dependencies>
+
+		<dependency>
+			<groupId>net.cnki.activiti</groupId>
+			<artifactId>activiti-api</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -29,10 +36,12 @@
 					<artifactId>spring-boot-starter-tomcat</artifactId>
 				</exclusion>
 			</exclusions>
+			<version>2.0.4.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-undertow</artifactId>
+			<version>2.0.4.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mybatis.spring.boot</groupId>
@@ -43,11 +52,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+			<version>2.0.4.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 			<optional>true</optional>
+			<version>2.0.4.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -58,15 +69,19 @@
 					<artifactId>lettuce-core</artifactId>
 				</exclusion>
 			</exclusions>
+			<version>2.0.4.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>redis.clients</groupId>
 			<artifactId>jedis</artifactId>
+			<version>2.9.0</version>
 		</dependency>
 		<!-- redis session -->
 		<dependency>
 			<groupId>org.springframework.session</groupId>
 			<artifactId>spring-session-data-redis</artifactId>
+			<version>2.0.5.RELEASE</version>
+
 		</dependency>
 		<dependency>
 			<groupId>com.alibaba</groupId>
@@ -76,6 +91,7 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.46</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
@@ -85,22 +101,27 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+			<version>2.0.4.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<version>2.0.4.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-websocket</artifactId>
+			<version>2.0.4.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-cache</artifactId>
+			<version>2.0.4.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
+			<version>2.0.4.RELEASE</version>
 		</dependency>
 
 		<dependency>
@@ -116,7 +137,7 @@
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>${logback.version}</version>
+			<version>1.2.3</version>
 		</dependency>
 		<!--fastdfs 分布式存储客户端-->
 		<dependency>
