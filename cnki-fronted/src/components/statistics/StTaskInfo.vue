@@ -69,12 +69,13 @@
          
           <el-button type="primary" @click="beginInstance">开始审批流程</el-button>
           <el-button type="primary" @click="studentClaim">提交</el-button>
+          <el-button type="primary" @click="showProgress">查看审批流程</el-button>
 
 
       </div>
       <div v-else-if="submitStatus">
          论文提交已成功，您可以随时查看审批情况
-        <el-steps :active="2" finish-status="success" simple style="margin-top: 20px">
+        <el-steps :active="progresDisplay" finish-status="success" simple style="margin-top: 20px">
             <el-step title="提交论文" ></el-step>
             <el-step title="教师审批" ></el-step>
             <el-step title="院长审批" ></el-step>
@@ -92,6 +93,8 @@ export default {
   data(){
     return {
       processInstanceId:'',
+      // 进度情况
+      progressInfo:'',
       stuName:'',
       stuNo:'',
       article:'',
@@ -114,14 +117,28 @@ export default {
    
   },
   mounted(){
+    this.getstatus()
     this.stuInfo  = this.$route.params.taskData.variables
   },
   computed:{
     theRole(){
       return this.$store.state.user.roles[0].name
+    },
+    progresDisplay(){
+      return this.progressInfo.length-1;
     }
   },
   methods:{
+    showProgress(){
+      this.submitStatus = true;
+    },
+    getstatus(){
+      this.getRequest("/system/basic/taskStatus").then(resp=>{
+        this.progressInfo = resp.data
+      }).cath(reson=>{
+        alert("error!")
+      })
+    },
     beginInstance(){
              this.getRequest("/system/basic/startProcess").then(resp=> {
                 if (resp && resp.status == 200) {
