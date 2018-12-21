@@ -11,9 +11,12 @@ import net.cnki.rest.runtime.domain.TaskRequestedParam;
 import org.activiti.engine.*;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricProcessInstanceQuery;
+import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.runtime.ProcessInstanceQuery;
 import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -164,17 +167,32 @@ public class ActivitiController extends AbstractTaskQueryResource {
         return theTable;
     }
 
+    /**
+     * 查看提交流程的审批情况，同样
+     * 目前这个接口也只是提供了一个简单的最近的一条的审批情况，而且是根据用户id来的
+     * @return
+     */
+    @GetMapping("taskStatus")
+    public List getTaskStatus(){
+        List<HistoricTaskInstance> result = historyService.
+                createHistoricTaskInstanceQuery().
+                taskOwner("student").orderByHistoricTaskInstanceStartTime().desc().list();
+
+        List<HistoricTaskInstance> tasks = historyService.createHistoricTaskInstanceQuery().executionId(result.get(0).getExecutionId()).list();
+
+        tasks.forEach(o->{
+            System.out.println("history task is:=========="+ToStringBuilder.reflectionToString(o,ToStringStyle.JSON_STYLE));
+        });
+
+        return tasks;
+    }
+
+    /**
+     * 获得任务
+     * @return
+     */
     @GetMapping("taskInfo")
     public List<TaskVo>  getTaskInfo(){
-
-
-        TaskRequestedParam taskRequestedParam = new TaskRequestedParam();
-        List<TaskVo> aa = super.listTasks(taskRequestedParam);
-        System.out.println("--------------size is:"+aa.size());
-
-        System.out.println("-sadfasdfasdfjkalsdjf======="+ToStringBuilder.reflectionToString(aa.get(0),ToStringStyle.JSON_STYLE));
-
-
 
         // 判断当前访问者的权限
         StringBuilder taskName = new StringBuilder();
