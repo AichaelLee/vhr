@@ -57,6 +57,8 @@
               <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
               <el-breadcrumb-item v-text="this.$router.currentRoute.name"></el-breadcrumb-item>
             </el-breadcrumb>
+            <tags-view/>
+
             <keep-alive>
               <router-view v-if="this.$route.meta.keepAlive"></router-view>
             </keep-alive>
@@ -72,7 +74,12 @@ import router from '../router'
 import Driver from 'driver.js' // import driver.js
 import 'driver.js/dist/driver.min.css' // import driver.js css
 import steps from './account/defineSteps'
+import { TagsView } from '../pages/layout'
   export default{
+    components: {
+ 
+    TagsView
+  },
     
     mounted: function () {
      this.role_zh = this.$store.state.user.roles[0].nameZh

@@ -110,7 +110,7 @@ import {formatRoutes} from '../utils/utils'
 
       },
       clicks(){
-        alert("saf")
+        // alert("saf")
       },
       changePlans(){
 

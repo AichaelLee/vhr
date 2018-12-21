@@ -6,15 +6,18 @@ import net.cnki.bean.Managers;
 import net.cnki.bean.TblTeacherBase;
 import net.cnki.bean.activiti.presetation.ProcessInstanceRepresentation;
 import net.cnki.bean.activiti.vo.TaskVo;
+import net.cnki.rest.runtime.AbstractTaskQueryResource;
+import net.cnki.rest.runtime.domain.TaskRequestedParam;
 import org.activiti.engine.*;
-import org.activiti.engine.form.StartFormData;
-import org.activiti.engine.form.TaskFormData;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.history.HistoricProcessInstanceQuery;
 import org.activiti.engine.repository.Deployment;
+import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,7 +35,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequestMapping("/system/basic")
-public class ActivitiController {
+public class ActivitiController extends AbstractTaskQueryResource {
 
     @Autowired
     RepositoryService repositoryService;
@@ -50,10 +53,13 @@ public class ActivitiController {
     @Autowired
     HistoryService historyService;
 
+    /**
+     * 学生发起一次新流程
+     */
     @GetMapping("startProcess")
-    public void startProcess(){
+    public String startProcess(){
 
-        getProcessInstance();
+       return getProcessInstance().getId();
 
     }
 
@@ -79,14 +85,30 @@ public class ActivitiController {
        // return super.getProcessInstances(requestNode);
     }
 
+    /**
+     * 学生开始一次流程,上面的那一个名字起的有问题,上面那个应该是启动给一个新实例,而不是新流程
+     */
+    @PostMapping("processStart")
+    public void newPorcess(){
+        TblTeacherBase currentUser = (TblTeacherBase)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(currentUser.getRoles().get(0).getName().equals("ROLE_student")){
 
-    @PostMapping("claim")
-    public Map claimTask(@RequestParam Map<String,Object> variables){
+            // 开启一次审批(论文提交)
+            // 得到所有任务
+            List<Task> tasks = taskService.createTaskQuery().list();
+
+
+        }
+
+
+    }
+
+    @PostMapping("claim/{processInstanceId}")
+    public Map claimTask(@RequestParam Map<String,Object> variables,@PathVariable("processInstanceId")String executinId){
+
+
 
         Map<String,Object> theTable = Maps.newHashMap();
-
-        System.out.println("=========claim variables is"+variables );
-
 
         StringBuilder userRole = new StringBuilder();
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -108,46 +130,51 @@ public class ActivitiController {
 
         }
 
-        // 得到所有任务
-        List<Task> tasks = taskService.createTaskQuery().list();
+        // 根据executionID得到当前任务
+        Task o = taskService.createTaskQuery().processInstanceId(executinId).singleResult();
+        // 得到认证关系
+        List<IdentityLink> identitiesList = taskService.getIdentityLinksForTask(o.getId());
 
+        for (IdentityLink p : identitiesList) {
 
+            log.info("all identityList is = {}:",ToStringBuilder
+                    .reflectionToString(p, ToStringStyle.JSON_STYLE));
 
-        for (Task o : tasks) {
-            System.out.println("all task is:" + o.toString());
-            // 得到认证关系
-            List<IdentityLink> identitiesList = taskService.getIdentityLinksForTask(o.getId());
+            if (p.getType().equals("candidate") && p.getUserId()
+                    .equals(userRole.toString())) {
 
-            for (IdentityLink p : identitiesList) {
+                theTable = taskService.getVariables(o.getId());
 
-                if (p.getType().equals("candidate") && p.getUserId().equals(userRole.toString())) {
+                taskService.setOwner(o.getId(),"student");
 
+                o.setOwner("student");
+                log.info(" the task detail is = {}", ToStringBuilder
+                        .reflectionToString(o, ToStringStyle.JSON_STYLE));
 
+                taskService.claim(o.getId(),userRole.toString());
 
-                    theTable = taskService.getVariables(o.getId());
-                    TaskFormData tf = formService.getTaskFormData(o.getId());
+                taskService.complete(o.getId(),variables);
 
-                    taskService.claim(o.getId(),userRole.toString());
-                    taskService.complete(o.getId(),variables);
-
-
-                   // FormData fd = formService.getStartFormData();
-                  //  System.out.println("=========formdata is:"+fd.getFormProperties());
-                   // TaskFormData formData = formService.getTaskFormData(o.getId());
-
-
-                    log.info("我是{}完成自己的任务啦!", userRole.toString());
-
-                }
+                log.info("我是{}完成自己的任务啦!", userRole.toString());
 
             }
 
         }
+
         return theTable;
     }
 
     @GetMapping("taskInfo")
     public List<TaskVo>  getTaskInfo(){
+
+
+        TaskRequestedParam taskRequestedParam = new TaskRequestedParam();
+        List<TaskVo> aa = super.listTasks(taskRequestedParam);
+        System.out.println("--------------size is:"+aa.size());
+
+        System.out.println("-sadfasdfasdfjkalsdjf======="+ToStringBuilder.reflectionToString(aa.get(0),ToStringStyle.JSON_STYLE));
+
+
 
         // 判断当前访问者的权限
         StringBuilder taskName = new StringBuilder();
@@ -167,6 +194,11 @@ public class ActivitiController {
             o.getName().equals(taskName.toString())
         ).collect(Collectors.toList());
 
+        for (Task task : result) {
+            System.out.println("task ===========owner is:"+task.getOwner());
+
+        }
+
         // the result is
         result.forEach(o-> System.out.println(o.toString()));
 
@@ -175,12 +207,16 @@ public class ActivitiController {
         for (TaskVo task : list1) {
 
             Map<String, Object> variables = taskService.getVariables(task.getId());
-            System.out.println("=========variables is "+variables);
 
+            ProcessDefinition processDefinition = repositoryService.getProcessDefinition(task.getProcessDefinitionId());
+            task.setProcessDefinationName(repositoryService
+                    .getProcessDefinition(task
+                            .getProcessDefinitionId()).getName());
             task.setVariables(variables);
 
             log.info("ID:" + task.getId()+"variables"+variables + ",任务名称:" + task.getName() + ",接收人:" + task.getAssignee() + ",开始时间:" + task.getCreateTime());
         }
+
         return list1;
 
 
@@ -200,11 +236,9 @@ public class ActivitiController {
     private  ProcessInstance getProcessInstance() {
 
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("thesis");
-
-        StartFormData st = formService.getStartFormData(processInstance.getProcessDefinitionId());
-        System.out.println("format data  is :="+st.getFormProperties()+"asdfasdf"+st.getFormKey());
-        log.info("启动流程 [{}]", processInstance.getProcessDefinitionKey());
-        //启动流程second_approve
+        System.out.println("==========important"+ToStringBuilder.reflectionToString(processInstance,ToStringStyle.JSON_STYLE));
+        log.info("启动流程 [{}] 成功", processInstance.getProcessDefinitionKey());
+        System.out.println("-------------startuser id:"+processInstance.getStartUserId());
         return processInstance;
     }
 

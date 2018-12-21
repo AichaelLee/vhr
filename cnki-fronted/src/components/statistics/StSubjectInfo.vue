@@ -53,7 +53,7 @@
         </el-collapse-item>
     </el-collapse>
   </div>
-      <!-- 学生显示的界面 -->
+      <!-- 指导教师显示的界面 -->
       <div v-if="theRole === 'ROLE_guideTeacher'">
         <h1>指导教师填写部分</h1>
         <el-row>
@@ -116,7 +116,8 @@
           </el-col>
         </el-row>
        <br>
-        <el-button type="primary" @click="teacherClaim">提交</el-button>
+        <el-button type="primary" size="mini"  @click="teacherClaim">审核通过</el-button>
+         <el-button type="danger" size="mini"  @click="notBegin">拒绝通过</el-button>
       </div>
       <!-- 院长部分！!! -->
       <div v-else-if="theRole === 'ROLE_dean'">
@@ -172,82 +173,11 @@
       </el-table-column>
     </el-table>
     <br>
-         <el-button type="primary" @click="claim">提交</el-button>
-
-
+         <el-button type="primary" size="mini" @click="claim">审核通过</el-button>
+         <el-button type="danger"  size="mini" @click="notBegin">拒绝通过</el-button>
       </div>
-      <div v-else-if="theRole === 'ROLE_student'">
-          <h1>
-        学生填写部分
-          </h1>
-          <br><br>
-        <el-row>
-          <el-col :span="12" :offset="6">
-              <el-form ref="form" label-width="80px">
-                  <el-form-item label="学生姓名">
-                    <el-input
-                    placeholder="请输入姓名"
-                    v-model="stuName"
-                    clearable>
-                  </el-input>
-                  </el-form-item>
-                  
-                  <el-form-item label="学号">
-
-                      <el-input
-                        
-                          :rows="2"
-                          placeholder="请输入学号"
-                          v-model="stuNo">
-                        </el-input>
-
-                  </el-form-item>
-
-                  <el-form-item label="课程题目">
-                    <el-input
-                    placeholder="课程题目"
-                    v-model="title"
-                    clearable>
-                  </el-input>
-                  </el-form-item>
-
-                 
-                  <el-form-item label="查阅文献">
-                    <el-input
-                    placeholder="查阅文献"
-                    v-model="article"
-                    clearable>
-                  </el-input>
-                  </el-form-item>
-
-                  <el-form-item label="开题报告">
-                    <el-input
-                    placeholder="开题报告"
-                    v-model="report"
-                    clearable>
-                  </el-input>
-                  </el-form-item>
-                   <el-form-item label="论文内容">
-                    <el-input
-                    placeholder="论文内容"
-                    type="textarea"
-                    v-model="content"
-                    clearable>
-                  </el-input>
-                  </el-form-item>
-
-
-              </el-form>
-          </el-col>
-        </el-row>
-        <br>
-         
-          <el-button type="primary" @click="beginInstance">开始审批流程</el-button>
-          <el-button type="primary" @click="studentClaim">提交</el-button>
-
-
-      </div>
-      <div v-else>当前角色h还未指派此流程中的任务</div>
+     
+      <div v-else>当前角色还未指派此流程中的任务</div>
       
   </div>
 </template>
@@ -255,6 +185,7 @@
 export default {
   data(){
     return {
+      processInstanceId:'',
       stuName:'',
       stuNo:'',
       article:'',
@@ -349,7 +280,10 @@ export default {
     }
   },
   mounted(){
-    this.getTaskInfo();
+
+       this.stuInfo  = this.$route.params.taskData.variables
+       
+
   },
   computed:{
     theRole(){
@@ -360,6 +294,8 @@ export default {
     beginInstance(){
              this.getRequest("/system/basic/startProcess").then(resp=> {
                 if (resp && resp.status == 200) {
+                  this.processInstanceId = resp.data
+                  alert(this.processInstanceId)
                  // alert("开始实例成功！")
                 }
               }).catch(reson=>{
@@ -383,7 +319,7 @@ export default {
         }
       },
     claim(){
-       this.postRequest('/system/basic/claim', {
+       this.postRequest('/system/basic/claim/'+this.$route.params.taskData.processInstanceId, {
           'processInfo': this.processInfo,
           'qualityEst': this.qualityEst,
           'stuAttitude': this.stuAttitude,
@@ -392,9 +328,10 @@ export default {
         }).then(resp=> {
                 if (resp && resp.status == 200) {
                    this.$message({
-                      message: '院长审核通过！',
+                      message: '审核完成！',
                       type: 'success'
                     });
+                    this.$router.push('/sta/score')
                
                 }
               }).catch(reson=>{
@@ -402,7 +339,7 @@ export default {
               })
     },
      teacherClaim(){
-       this.postRequest('/system/basic/claim', {
+       this.postRequest('/system/basic/claim/'+this.$route.params.taskData.processInstanceId, {
           'processInfo': this.processInfo,
           'qualityEst': this.qualityEst,
           'stuAttitude': this.stuAttitude,
@@ -411,9 +348,10 @@ export default {
         }).then(resp=> {
                 if (resp && resp.status == 200) {
                   this.$message({
-                    message:'教师审核已完成',
+                    message:'审核已完成',
                     type: 'success'
                   })
+                  this.$router.push('/sta/score')
                
                 }
               }).catch(reson=>{
@@ -421,7 +359,7 @@ export default {
               })
     },
     studentClaim(){
-       this.postRequest('/system/basic/claim', {
+       this.postRequest('/system/basic/claim/'+this.processInstanceId, {
           'stuName': this.stuName,
           'stuNo': this.stuNo,
           'article': this.article,
@@ -440,24 +378,9 @@ export default {
                 alert("reget menu error"+reson)
               })
     },
-    submitThesis(){},
-    getTaskInfo(){
-      this.getRequest('/system/basic/taskInfo').then(resp=>{
-        if(resp && resp.status===200){
-           this.stuInfo = resp.data[0].variables;
-          // if(this.$store.state.user.roles[0].name==='ROLE_guideTeacher'){
-           
-          // }else if(this.$store.state.user.roles[0].name == 'ROLE_dean'){
-          //    this.teacherEvaluation=resp.data[0].variables;
-          //    alert(this.teacherEvaluation)
-          // }
-         
-        
-        }
-      }).catch(reson=>{
-        alert("error and reson is"`${reson}`)
-      })
-    }
+    notBegin(){
+      alert("这个功能还没做呢！")
+    },
   }
 }
 </script>

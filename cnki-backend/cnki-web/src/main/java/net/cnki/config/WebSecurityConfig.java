@@ -74,6 +74,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        // druid 或 swagger 的iframe加载
+        http.headers().frameOptions().sameOrigin();
         http.addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
         .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {

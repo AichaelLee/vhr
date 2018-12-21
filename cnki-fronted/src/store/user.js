@@ -1,14 +1,7 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import '../lib/sockjs'
-import '../lib/stomp'
-import tagsView from './tagsView'
-
-Vue.use(Vuex)
-
-export default new Vuex.Store({
-  tagsView,
-  state: {
+import  '../lib/stomp'
+import  '../lib/sockjs'
+  const user = {
+    state: {
     user: {
       name: window.localStorage.getItem('user' || '[]') == null ? '未登录' : JSON.parse(window.localStorage.getItem('user' || '[]')).name,
       userface: window.localStorage.getItem('user' || '[]') == null ? '' : JSON.parse(window.localStorage.getItem('user' || '[]')).userface,
@@ -85,4 +78,7 @@ export default new Vuex.Store({
       });
     }
   }
-});
+}
+
+
+export default user

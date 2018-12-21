@@ -1,41 +1,67 @@
 <template>
   <div>
     <h1>
-      角色：学生
-      查看审批中的流程（论文）
+      
+      查看当前正在进行中的流程
        <el-table
-    :data="tableData"
+    :data="taskInfo"
     style="width: 100%">
     <el-table-column
-      label="日期"
+      label="流程名称"
       width="180">
       <template slot-scope="scope">
         <i class="el-icon-time"></i>
-        <span style="margin-left: 10px">{{ scope.row.date }}</span>
+        <span style="margin-left: 10px">{{ scope.row.processDefinationName }}</span>
       </template>
     </el-table-column>
     <el-table-column
-      label="姓名"
-      width="180">
+      label="申请人"
+      width="120">
       <template slot-scope="scope">
         <el-popover trigger="hover" placement="top">
-          <p>姓名: {{ scope.row.name }}</p>
-          <p>住址: {{ scope.row.address }}</p>
+          <p>姓名: 学生A</p>
+          <p>题目: 瞎闹着玩呗</p>
           <div slot="reference" class="name-wrapper">
-            <el-tag size="medium">{{ scope.row.name }}</el-tag>
+            <el-tag size="medium">学生A</el-tag>
           </div>
         </el-popover>
       </template>
     </el-table-column>
-    <el-table-column label="操作">
+      <el-table-column
+      label="申请时间"
+      width="150">
+      <template slot-scope="scope">
+       
+       {{ scope.row.createTime | parseTime}}
+      </template>
+    </el-table-column>
+      <el-table-column
+      label="开始时间"
+      width="150">
+      <template slot-scope="scope">
+       
+      {{ scope.row.createTime | parseTime}}
+      </template>
+    </el-table-column>
+      <el-table-column
+      label="结束时间"
+      width="150">
+      <template slot-scope="scope">
+      {{ scope.row.createTime | parseTime }}
+      </template>
+    </el-table-column>
+      <el-table-column
+      label="当前节点"
+      width="180">
+      <template slot-scope="scope">
+       {{ scope.row.name }}
+      </template>
+    </el-table-column>
+    <el-table-column label="办理">
       <template slot-scope="scope">
         <el-button
           size="mini"
-          @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-        <el-button
-          size="mini"
-          type="danger"
-          @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          @click="approval(scope.row)">审核</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -48,6 +74,7 @@ export default {
   data(){
     return {
       instanceData:'',
+      taskInfo:'',
       tableData: [{
           date: '2016-05-02',
           name: '王小虎',
@@ -69,6 +96,14 @@ export default {
   },
   mounted(){
     this.getProcessInstance();
+    this.getTaskInfo();
+  },
+  filters:{
+    parseTime(time){
+      let  date = new Date(time)
+      return date.getFullYear()+'-'+date.getMonth()+'-'+date.getDate()
+    }
+   
   },
   methods:{
     getProcessInstance(){
@@ -79,11 +114,33 @@ export default {
         }).then(resp=> {
           if (resp && resp.status == 200) {
             //this.instanceData = resp.data;
-            alert("success")
+          //  alert("success")
           
            
           }
         });
+    },
+    getTaskInfo(){
+      this.getRequest('/system/basic/taskInfo').then(resp=>{
+        if(resp && resp.status===200){
+          
+           this.taskInfo = resp.data;
+        
+        }
+      }).catch(reson=>{
+        alert("error and reson is"`${reson}`)
+      })
+    },
+    approval(data){
+        this.$router.push({
+            path: '/sta/all', 
+            name: '查看课题信息',
+            params: { 
+                taskData:data
+            }
+        })
+ 
+
     }
   }
 }

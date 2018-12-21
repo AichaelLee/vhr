@@ -13,6 +13,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +54,30 @@ public class SystemBasicController {
 
     @Autowired
     private SimpleAuthorityMapper simpleAuthorityMapper;
+
+
+    @RequestMapping(value = "/druid", method = RequestMethod.GET)
+    public void getWeather(@RequestParam(name = "city", defaultValue = "130010") String city,
+                           HttpServletResponse response) throws IOException{
+
+        String jsonText = readJsonFromUrl("http://localhost:8080/druid/index.html");
+        response.setContentType("application/json");
+        response.getWriter().write(jsonText);
+    }
+    private static String readJsonFromUrl(String url) throws IOException {
+        try (InputStream is = new URL(url).openStream()) {
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            return readAll(rd);
+        }
+    }
+    private static String readAll(Reader rd) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        int cp;
+        while ((cp = rd.read()) != -1) {
+            sb.append((char) cp);
+        }
+        return sb.toString();
+    }
 
 
 
