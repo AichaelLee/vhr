@@ -121,17 +121,33 @@
 		<!--</dependency>-->
 
 		<!-- https://mvnrepository.com/artifact/org.activiti/activiti-rest -->
+		<!--<dependency>-->
+			<!--<groupId>org.activiti</groupId>-->
+			<!--<artifactId>activiti-rest</artifactId>-->
+			<!--<exclusions>-->
+				<!--<exclusion>-->
+					<!--<groupId>org.slf4j</groupId>-->
+					<!--<artifactId>slf4j-log4j12</artifactId>-->
+				<!--</exclusion>-->
+			<!--</exclusions>-->
+			<!--<version>6.0.0</version>-->
+		<!--</dependency>-->
+
+		<!-- https://mvnrepository.com/artifact/org.activiti/activiti-spring-boot-starter-rest-api -->
 		<dependency>
 			<groupId>org.activiti</groupId>
-			<artifactId>activiti-rest</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-log4j12</artifactId>
-				</exclusion>
-			</exclusions>
+			<artifactId>activiti-spring-boot-starter-rest-api</artifactId>
 			<version>6.0.0</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.activiti/activiti-spring-boot-starter-actuator -->
+		<dependency>
+			<groupId>org.activiti</groupId>
+			<artifactId>activiti-spring-boot-starter-actuator</artifactId>
+			<version>6.0.0</version>
+		</dependency>
+
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-actuator-autoconfigure</artifactId>

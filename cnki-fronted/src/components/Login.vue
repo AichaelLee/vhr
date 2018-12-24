@@ -42,7 +42,7 @@
       }
     },
     methods: {
-      submitClick: function () {
+      submitClick () {
         var _this = this;
         this.loading = true;
         this.postRequest('/login', {
