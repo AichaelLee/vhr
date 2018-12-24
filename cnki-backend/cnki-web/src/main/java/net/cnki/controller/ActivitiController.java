@@ -23,6 +23,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,9 +62,7 @@ public class ActivitiController extends AbstractTaskQueryResource {
      */
     @GetMapping("startProcess")
     public String startProcess(){
-
        return getProcessInstance().getId();
-
     }
 
     @RequestMapping(value = "query/process-instances", method = RequestMethod.POST)
